@@ -52,6 +52,7 @@ def add_image():
 @app.route("/api/getvpn")
 def get_image():
     try:
+        print(request.args)
         filename = db.GetVPNImage(request.args['token'])
     except:
         filename = "default.squashfs"
