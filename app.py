@@ -4,4 +4,4 @@ app = Flask(__name__)
 
 @app.route("/api/getvpn")
 def hello_world():
-    return send_file("praktyki.squashfs")
+    return send_file("configs/squash/praktyki.squashfs")

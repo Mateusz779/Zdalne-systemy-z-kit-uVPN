@@ -53,9 +53,8 @@ cd $CONFIGS
 cp $conf /tmp/output
 cp $ini /tmp/output
 cp $key /tmp/output
-if [ "$scripts" ]; then
-  echo "Podano parametr."
- cp -r $scripts /tmp/output/
+if [ -n "$scripts" ]; then
+  cp -r $scripts /tmp/output/
 fi
 sed -i '/^private_key/c\private_key uVPN.priv' /tmp/output/$conf
 sed -i '/^name/c\name '"$name" /tmp/output/$conf
@@ -65,7 +64,8 @@ sed -i '1s/.*/['"$name"']/' /tmp/output/$ini
 cd /tmp/output
 mkdir vpn
 mv * vpn
-mkdir $CONFIGS/squash/$name
+mkdir -t $CONFIGS/squash
+mkdir -t $CONFIGS/squash/$name
 mksquashfs . $CONFIGS/squash/$name.squashfs
 cp /tmp/output/vpn/$name.pub $CONFIGS/squash/$name
 
