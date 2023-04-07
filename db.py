@@ -43,8 +43,9 @@ def AddVPNImage(name, token):
 def GetVPNImage(token):
     Connect()
     with GetCur() as cur:
-        return cur.execute("""
+        cur.execute("""
             SELECT image_name FROM vpn WHERE token = %s
-        """,(token,)).fetchone()
+        """,(token,))
+        return cur.fetchone()
         
     
