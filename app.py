@@ -7,7 +7,7 @@ app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = "configs/squash"
 app.config['MAX_CONTENT_LENGTH'] = 1024 * 1024 * 512 #512MB
 
-@app.route("api/addimage", methods=['POST'])
+@app.route("/api/addimage", methods=['POST'])
 def add_image():
     db.Connect()
     name = None
