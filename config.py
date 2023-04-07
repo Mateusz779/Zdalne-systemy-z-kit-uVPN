@@ -1,0 +1,5 @@
+database="praktyki"
+host="localhost"
+user="praktyki"
+password="2a7driUITXFy73tO"
+port="5432"
