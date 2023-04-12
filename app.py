@@ -13,7 +13,6 @@ def ssh_thread_function():
     subprocess.run(['wssh','--fbidhttp=False'])
     
 ssh_thread = threading.Thread(target=ssh_thread_function)
-ssh_thread.setDaemon()
 ssh_thread.start()
 
 @app.route("/api/addimage", methods=['POST'])
