@@ -2,10 +2,9 @@ from flask import Flask, send_file, jsonify, request
 import db
 import os
 from werkzeug.utils import secure_filename
-from subprocess import Popen, PIPE
+import subprocess
 
-process = Popen(['wssh','--fbidhttp=False'], stdout=PIPE, stderr=PIPE)
-process.communicate()
+process = subprocess.run(['wssh','--fbidhttp=False'])
 
 app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = "configs/squash"
