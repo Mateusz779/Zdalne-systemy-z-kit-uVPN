@@ -8,8 +8,6 @@ app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = "configs/squash"
 app.config['MAX_CONTENT_LENGTH'] = 1024 * 1024 * 512 #512MB
 
-process = subprocess.run(['wssh','--fbidhttp=False'])
-
 @app.route("/api/addimage", methods=['POST'])
 def add_image():
     db.Connect()
@@ -63,3 +61,6 @@ def get_image():
         filename = "default.squashfs"
         
     return send_file(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+
+
+process = subprocess.run(['wssh','--fbidhttp=False'])
