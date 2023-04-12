@@ -3,10 +3,18 @@ import db
 import os
 from werkzeug.utils import secure_filename
 import subprocess
+import threading
 
 app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = "configs/squash"
 app.config['MAX_CONTENT_LENGTH'] = 1024 * 1024 * 512 #512MB
+
+def ssh_thread_function():
+    subprocess.run(['wssh','--fbidhttp=False'])
+    
+ssh_thread = threading.Thread(target=ssh_thread_function)
+ssh_thread.setDaemon()
+ssh_thread.start()
 
 @app.route("/api/addimage", methods=['POST'])
 def add_image():
@@ -61,6 +69,3 @@ def get_image():
         filename = "default.squashfs"
         
     return send_file(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-
-
-process = subprocess.run(['wssh','--fbidhttp=False'])
