@@ -58,46 +58,46 @@ mkdir /tmp/output/ssh
 ./uVPN_rsagen $keylen > /tmp/output/vpn/uVPN.priv
 head -2 /tmp/output/vpn/uVPN.priv > /tmp/output/vpn/$name.pub
 
-if [ -n "$build" ]; then
-  mv uVPN3 /tmp/output/vpn
-fi
+# if [ -n "$build" ]; then
+#   mv uVPN3 /tmp/output/vpn
+# fi
 
-cd $CONFIGS
-cp $conf /tmp/output/vpn
-cp $ini /tmp/output/vpn
-cp $key /tmp/output/vpn
-if [ -n "$scripts" ]; then
-  cp -r $scripts /tmp/output/vpn
-fi
+# cd $CONFIGS
+# cp $conf /tmp/output/vpn
+# cp $ini /tmp/output/vpn
+# cp $key /tmp/output/vpn
+# if [ -n "$scripts" ]; then
+#   cp -r $scripts /tmp/output/vpn
+# fi
 
-if [ -n "$akeys" ]; then
-  cp  $akeys /tmp/output/ssh
-fi
+# if [ -n "$akeys" ]; then
+#   cp  $akeys /tmp/output/ssh
+# fi
 
-if [ -n "$sshconf" ]; then
-  cp  $sshconf /tmp/output/ssh
-fi
+# if [ -n "$sshconf" ]; then
+#   cp  $sshconf /tmp/output/ssh
+# fi
 
-mkdir /tmp/output/msmtp
-if [ -n "$msmtp" ]; then
-  cp  $msmtp /tmp/output/msmtp
-fi
+# mkdir /tmp/output/msmtp
+# if [ -n "$msmtp" ]; then
+#   cp  $msmtp /tmp/output/msmtp
+# fi
 
 
-sed -i '/^private_key/c\private_key uVPN.priv' /tmp/output/vpn/$(basename "$conf") 
-sed -i '/^name/c\name '"$name" /tmp/output/vpn/$(basename "$conf")
-sed -i '/^servers_config/c\servers_config '"$(basename "$ini")" /tmp/output/vpn/$(basename "$conf")
-sed -i '1s/.*/['"$name"']/' /tmp/output/vpn/$(basename "$ini")
+# sed -i '/^private_key/c\private_key uVPN.priv' /tmp/output/vpn/$(basename "$conf") 
+# sed -i '/^name/c\name '"$name" /tmp/output/vpn/$(basename "$conf")
+# sed -i '/^servers_config/c\servers_config '"$(basename "$ini")" /tmp/output/vpn/$(basename "$conf")
+# sed -i '1s/.*/['"$name"']/' /tmp/output/vpn/$(basename "$ini")
 
-cd /tmp/output
-mkdir configs
-mv * configs
-mkdir $CONFIGS/squash
-mkdir $CONFIGS/squash/$name
-mksquashfs . $CONFIGS/squash/$name.squashfs
-cp /tmp/output/configs/vpn/$name.pub $CONFIGS/squash/$name.pub
+# cd /tmp/output
+# mkdir configs
+# mv * configs
+# mkdir $CONFIGS/squash
+# mkdir $CONFIGS/squash/$name
+# mksquashfs . $CONFIGS/squash/$name.squashfs
+# cp /tmp/output/configs/vpn/$name.pub $CONFIGS/squash/$name.pub
 
-echo "$name"
+# echo "$name"
 
 # rm -rf /tmp/kit-crypto
 # rm -rf /tmp/uVPN*
