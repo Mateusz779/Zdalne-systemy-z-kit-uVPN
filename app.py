@@ -30,8 +30,7 @@ def login_post():
 
     auth_token = db.login(username, password)
     if auth_token is None:
-        flash('Nieprawidłowa nazwa użytkownika lub hasło.', 'error')
-        return redirect(url_for('/'))
+        return render_template('login.html', incorrect="Incorrect username or password!")
     
     response = make_response(render_template('index.html'))
     response.set_cookie('auth_token', auth_token)
