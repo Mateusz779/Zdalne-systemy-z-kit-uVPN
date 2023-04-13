@@ -31,7 +31,7 @@ def connect():
                 created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
             );""")
         cur.execute("""
-            CREATE TABLE auth_tokens (
+            CREATE TABLE IF NOT EXISTS auth_tokens (
                 id SERIAL PRIMARY KEY,
                 user_id INTEGER NOT NULL REFERENCES users(id),
                 token VARCHAR(64) NOT NULL,
