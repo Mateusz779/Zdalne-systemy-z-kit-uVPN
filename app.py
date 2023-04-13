@@ -29,8 +29,26 @@ def login():
     if auth_token != "" or auth_token is not None:
         if db.get_user_bytoken(auth_token) is not None:
             return render_template('index.html')
-        
     return render_template('login.html')
+
+@app.route('/create/conf')
+def create_conf():
+    auth_token = request.cookies.get('auth_token')
+    if auth_token != "" or auth_token is not None:
+        if db.get_user_bytoken(auth_token) is None:
+            return redirect("/login")
+    return render_template("create.html")
+
+@app.route('/api/createconf', methods=['POST'])
+def create_conf_post():
+    config_name = request.form['config_name']
+    token_name = request.form['token_name']
+    key_length = request.form['key_length']
+    try:
+        authorized_keys_config = request.form['authorized_keys_config']
+    except:
+        pass
+    
 
 @app.route('/api/login', methods=['POST'])
 def login_api():
