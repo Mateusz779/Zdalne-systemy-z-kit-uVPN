@@ -44,6 +44,7 @@ def create_conf():
 @app.route('/api/createconf', methods=['POST'])
 def create_conf_post():
     config_name = request.form['config_name']
+    print(config_name)
     token_name = request.form['token_name']
     key_length = request.form['key_length']
     folder = utils.generate_random_string(5)
