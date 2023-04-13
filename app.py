@@ -20,19 +20,27 @@ def main():
     auth_token = request.cookies.get('auth_token')
     if auth_token != "" or auth_token is not None:
         if db.get_user_bytoken(auth_token) is None:
-            return render_template('login.html')
+            return redirect("/login")
     return render_template('index.html')
 
-
+@app.route('/')
+def login():
+    try:
+        if request.get_data()["incorrect"]:
+            return render_template('login.html', incorrect="Incorrect username or password!")  
+    except:
+        pass
+    return render_template('login.html')
 
 @app.route('/api/login', methods=['POST'])
-def login_post():
+def login_api():
     username = request.form['username']
     password = request.form['password']
 
     auth_token = db.login(username, password)
     if auth_token is None:
-        response = make_response(redirect("/"), render_template('login.html', incorrect="Incorrect username or password!"))
+        response = make_response(redirect("/login"))
+        response.set_data({"incorrect":"Incorrect username or password!"})
         return response
     
     response = make_response(render_template('index.html'))
