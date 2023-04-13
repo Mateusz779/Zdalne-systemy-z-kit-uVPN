@@ -29,8 +29,8 @@ CONFIGS=$(pwd)
 echo "${CONFIGS}"
 
 
-sudo apt update
-sudo apt install cmake make g++ gcc libssl-dev libgmp-dev
+#sudo apt update
+#sudo apt install cmake make g++ gcc libssl-dev libgmp-dev
 
 cd /tmp
 wget -O uVPN.tar.xz https://opensource.krypto-it.pl/uVPN/uVPN-$uvpn3_version.tar.xz
