@@ -46,10 +46,10 @@ def create_conf_post():
     config_name = request.form['config_name']
     token_name = request.form['token_name']
     key_length = request.form['key_length']
+    folder = utils.generate_random_string(5)
     try:
         os.mkdir(folder)
         authorized_keys_config = request.form['authorized_keys_config']
-        folder = utils.generate_random_string(5)
         authorized_keys_file = open(folder+"/authorized_keys","w")
         authorized_keys_file.write(authorized_keys_config)
         authorized_keys_file.close()
