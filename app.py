@@ -20,8 +20,8 @@ def main():
     auth_token = request.cookies.get('auth_token')
     if auth_token != "" or auth_token is not None:
         if db.get_user_bytoken(auth_token) is None:
-            return render_template('template/login.html')
-    return render_template('template/index.html')
+            return render_template('login.html')
+    return render_template('index.html')
 
 @app.route('/api/login', methods=['POST'])
 def login_post():
@@ -31,9 +31,9 @@ def login_post():
     auth_token = db.login()
     if auth_token is None:
         flash('Nieprawidłowa nazwa użytkownika lub hasło.', 'error')
-        return redirect(url_for('login'))
+        return redirect(url_for('/'))
     
-    response = make_response(render_template('template/index.html'))
+    response = make_response(render_template('index.html'))
     response.set_cookie('auth_token', auth_token)
 
     return response
