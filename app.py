@@ -18,7 +18,7 @@ ssh_thread.start()
 @app.route('/')
 def main():
     auth_token = request.cookies.get('auth_token')
-    if auth_token != "" and auth_token is not None:
+    if auth_token != "" or auth_token is not None:
         if db.get_user_bytoken(auth_token) is None:
             return render_template('template/login.html')
     return render_template('template/index.html')
