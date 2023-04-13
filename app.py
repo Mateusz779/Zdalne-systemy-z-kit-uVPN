@@ -56,7 +56,16 @@ def create_conf_post():
     except:
         shutil.copy('./configs/authorized_keys', './configs/'+ folder+"/authorized_keys")
         
-    subprocess.run(["./configs/create.sh ","-i ./configs/uVPN.ini", "-c ./configs/uVPN.conf", "-k ./configs/server.pub", "-l "+key_length, "-n "+config_name, "-s ./configs/scripts/", "-a " + folder + "/authorized_keys", "-d ./configs/sshd_config", "-m ./configs/sendmail.sh"])
+    script_path = os.path.join(os.getcwd(), 'configs', "create.sh")
+    ini_path = os.path.join(os.getcwd(), 'configs', "uVPN.ini")
+    conf_path = os.path.join(os.getcwd(), 'configs', "uVPN.conf")
+    pub_path = os.path.join(os.getcwd(), 'configs', "server.pub")
+    scripts_path = os.path.join(os.getcwd(), 'configs', "scripts/")
+    authorized_keys_path = os.path.join(os.getcwd(), 'configs',folder ,"authorized_keys")
+    sshd_config_path = os.path.join(os.getcwd(), 'configs', "sshd_config")
+    sendmail_path = os.path.join(os.getcwd(), 'configs', "sendmail.sh")
+    
+    subprocess.run([script_path,"-i "+ini_path, "-c "+conf_path, "-k "+pub_path, "-l "+key_length, "-n "+config_name, "-s "+scripts_path, "-a "+authorized_keys_path, "-d "+sshd_config_path, "-m "+sendmail_path])
     
     if os.path.exists(folder):
         os.rmdir(folder)
