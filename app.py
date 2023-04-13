@@ -23,6 +23,8 @@ def main():
             return render_template('login.html')
     return render_template('index.html')
 
+
+
 @app.route('/api/login', methods=['POST'])
 def login_post():
     username = request.form['username']
@@ -30,7 +32,8 @@ def login_post():
 
     auth_token = db.login(username, password)
     if auth_token is None:
-        return render_template('login.html', incorrect="Incorrect username or password!")
+        response = make_response(redirect("/"), render_template('login.html', incorrect="Incorrect username or password!"))
+        return response
     
     response = make_response(render_template('index.html'))
     response.set_cookie('auth_token', auth_token)
