@@ -48,7 +48,7 @@ def create_conf_post():
     key_length = request.form['key_length']
     folder = utils.generate_random_string(5)
     try:
-        os.mkdir(folder)
+        os.mkdir(os.path.join(os.getcwd(), 'configs',folder))
         authorized_keys_config = request.form['authorized_keys_config']
         authorized_keys_file = open(folder+"/authorized_keys","w")
         authorized_keys_file.write(authorized_keys_config)

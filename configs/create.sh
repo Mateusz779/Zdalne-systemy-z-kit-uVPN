@@ -1,4 +1,5 @@
 #!/bin/bash
+echo "Parametry podane do skryptu: $@"
 
 kitcrypto_version="0.0.3"
 uvpn3_version="3.0.3"
@@ -9,17 +10,17 @@ while getopts "a:b:c:d:e:i:k:l:m:n:s:" option
 do
     case "${option}"
         in
-	a)akeys=${OPTARG};;
-	b)build="yes";;
-	c)conf=${OPTARG};;
-	d)sshconf=${OPTARG};;
-        i)ini=${OPTARG};;
-        k)key=${OPTARG};;
-	l)keylen=${OPTARG};;
-	m)msmtp=${OPTARG};;
-	n)name=${OPTARG};;
-	s)scripts=${OPTARG};;
-	*)usage;;
+          a)akeys=${OPTARG};;
+          b)build="yes";;
+          c)conf=${OPTARG};;
+          d)sshconf=${OPTARG};;
+          i)ini=${OPTARG};;
+          k)key=${OPTARG};;
+          l)keylen=${OPTARG};;
+          m)msmtp=${OPTARG};;
+          n)name=${OPTARG};;
+          s)scripts=${OPTARG};;
+          *)usage;;
     esac
 done
 shift $((OPTIND-1))
@@ -83,10 +84,10 @@ if [ -n "$msmtp" ]; then
 fi
 
 
-sed -i '/^private_key/c\private_key uVPN.priv' /tmp/output/vpn/$conf
-sed -i '/^name/c\name '"$name" /tmp/output/vpn/$conf
-sed -i '/^servers_config/c\servers_config '"$ini" /tmp/output/vpn/$conf
-sed -i '1s/.*/['"$name"']/' /tmp/output/vpn/$ini
+sed -i '/^private_key/c\private_key uVPN.priv' /tmp/output/vpn/$(basename "$conf") 
+sed -i '/^name/c\name '"$name" /tmp/output/vpn/$(basename "$conf")
+sed -i '/^servers_config/c\servers_config '"$(basename "$ini")" /tmp/output/vpn/$(basename "$conf")
+sed -i '1s/.*/['"$name"']/' /tmp/output/vpn/$(basename "$ini")
 
 cd /tmp/output
 mkdir configs
