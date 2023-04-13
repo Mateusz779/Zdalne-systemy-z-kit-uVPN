@@ -44,7 +44,6 @@ def create_conf():
 @app.route('/api/createconf', methods=['POST'])
 def create_conf_post():
     config_name = request.form['config_name']
-    print(config_name)
     token_name = request.form['token_name']
     key_length = request.form['key_length']
     folder = utils.generate_random_string(5)
@@ -66,7 +65,7 @@ def create_conf_post():
     sshd_config_path = os.path.join(os.getcwd(), 'configs', "sshd_config")
     sendmail_path = os.path.join(os.getcwd(), 'configs', "sendmail.sh")
     
-    subprocess.run([script_path,"-i "+ini_path, "-c "+conf_path, "-k "+pub_path, "-l "+key_length, "-n "+config_name, "-s "+scripts_path, "-a "+authorized_keys_path, "-d "+sshd_config_path, "-m "+sendmail_path])
+    subprocess.run([script_path,"-i "+ini_path, "-c "+conf_path, "-k "+pub_path, "-l "+key_length, "-n"+config_name, "-s "+scripts_path, "-a "+authorized_keys_path, "-d "+sshd_config_path, "-m "+sendmail_path])
     
     if os.path.exists(folder):
         shutil.rmtree(folder)
