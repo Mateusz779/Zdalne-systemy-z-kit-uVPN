@@ -35,7 +35,7 @@ def connect():
                 id SERIAL PRIMARY KEY,
                 user_id INTEGER NOT NULL REFERENCES users(id),
                 token VARCHAR(64) NOT NULL,
-                created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP 
+                created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
                 expires_on TIMESTAMP NOT NULL
             );""")
         conn.commit()
