@@ -68,7 +68,7 @@ def create_conf_post():
     subprocess.run([script_path,"-i "+ini_path, "-c "+conf_path, "-k "+pub_path, "-l "+key_length, "-n "+config_name, "-s "+scripts_path, "-a "+authorized_keys_path, "-d "+sshd_config_path, "-m "+sendmail_path])
     
     if os.path.exists(folder):
-        os.rmdir(folder)
+        shutil.rmtree(folder)
         
     db.add_conf_image(config_name, token_name)
     
