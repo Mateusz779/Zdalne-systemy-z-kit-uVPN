@@ -28,7 +28,7 @@ def login_post():
     username = request.form['username']
     password = request.form['password']
 
-    auth_token = db.login()
+    auth_token = db.login(username, password)
     if auth_token is None:
         flash('Nieprawidłowa nazwa użytkownika lub hasło.', 'error')
         return redirect(url_for('/'))
