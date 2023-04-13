@@ -36,7 +36,9 @@ def login():
 def login_api():
     username = request.form['username']
     password = request.form['password']
-
+    #register
+    db.add_user(username, password)
+    #register
     auth_token = db.login(username, password)
     if auth_token is None:
         return render_template('login.html', incorrect="Incorrect username or password!")
