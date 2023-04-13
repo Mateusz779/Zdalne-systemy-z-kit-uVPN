@@ -4,6 +4,8 @@ import os
 from werkzeug.utils import secure_filename
 import subprocess
 import threading
+import utils
+import shutil
 
 app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = "configs/squash"
@@ -45,9 +47,23 @@ def create_conf_post():
     token_name = request.form['token_name']
     key_length = request.form['key_length']
     try:
+        os.mkdir(folder)
         authorized_keys_config = request.form['authorized_keys_config']
+        folder = utils.generate_random_string(5)
+        authorized_keys_file = open(folder+"/authorized_keys","w")
+        authorized_keys_file.write(authorized_keys_config)
+        authorized_keys_file.close()
     except:
-        pass
+        shutil.copy('./configs/authorized_keys', './configs/'+ folder+"/authorized_keys")
+        
+    subprocess.run(["./configs/create.sh ","-i ./configs/uVPN.ini", "-c ./configs/uVPN.conf", "-k ./configs/server.pub", "-l "+key_length, "-n "+config_name, "-s ./configs/scripts/", "-a " + folder + "/authorized_keys", "-d ./configs/sshd_config", "-m ./configs/sendmail.sh"])
+    
+    if os.path.exists(folder):
+        os.rmdir(folder)
+        
+    db.add_conf_image(config_name, token_name)
+    
+    return send_file(os.path.join(app.config['UPLOAD_FOLDER'], config_name+".pub"))
     
 
 @app.route('/api/login', methods=['POST'])
