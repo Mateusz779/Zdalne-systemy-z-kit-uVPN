@@ -1,4 +1,4 @@
-from flask import Flask, send_file, jsonify, request
+from flask import Flask, flash, make_response, redirect, send_file, jsonify, request, render_template, url_for
 import db
 import os
 from werkzeug.utils import secure_filename
@@ -14,6 +14,30 @@ def ssh_thread_function():
     
 ssh_thread = threading.Thread(target=ssh_thread_function)
 ssh_thread.start()
+
+@app.route('/')
+def main():
+    auth_token = request.cookies.get('auth_token')
+    if auth_token != "" and auth_token is not None:
+        if db.get_user_bytoken(auth_token) is None:
+            return render_template('template/login.html')
+    return render_template('template/index.html')
+
+@app.route('/api/login', methods=['POST'])
+def login_post():
+    username = request.form['username']
+    password = request.form['password']
+
+    auth_token = db.login()
+    if auth_token is None:
+        flash('Nieprawidłowa nazwa użytkownika lub hasło.', 'error')
+        return redirect(url_for('login'))
+    
+    response = make_response(render_template('template/index.html'))
+    response.set_cookie('auth_token', auth_token)
+
+    return response
+
 
 @app.route("/api/addimage", methods=['POST'])
 def add_image():
@@ -51,19 +75,14 @@ def add_image():
         else:
             filename = "1"+filename
     file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-    
-    db.AddVPNImage(filename, token)
+    db.add_conf_image(filename, token)
 
     return jsonify(message="ok")
    
 
-@app.route("/api/getvpn")
+@app.route("/api/getconf")
 def get_image():
-    try:
-        filename = db.GetVPNImage(request.headers['token'])[0]
-        print(filename)
-    except:
-        filename = "default.squashfs"
+    filename = db.get_conf_image(request.headers['token'])
     if filename is None or filename == "":
         filename = "default.squashfs"
         
