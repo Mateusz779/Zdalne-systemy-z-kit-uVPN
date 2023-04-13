@@ -23,7 +23,7 @@ def main():
             return redirect("/login")
     return render_template('index.html')
 
-@app.route('/')
+@app.route('/login')
 def login():
     try:
         if request.get_data()["incorrect"]:
