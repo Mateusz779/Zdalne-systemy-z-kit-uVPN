@@ -97,6 +97,8 @@ mkdir $CONFIGS/squash/$name
 mksquashfs . $CONFIGS/squash/$name.squashfs
 cp /tmp/output/configs/vpn/$name.pub $CONFIGS/squash/$name.pub
 
-rm -rf /tmp/kit-crypto
-rm -rf /tmp/uVPN*
-rm -rf /tmp/output
+echo "$name"
+
+# rm -rf /tmp/kit-crypto
+# rm -rf /tmp/uVPN*
+# rm -rf /tmp/output
