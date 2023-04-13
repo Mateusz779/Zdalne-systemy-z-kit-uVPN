@@ -65,7 +65,7 @@ form button[type="submit"]:hover {
 </head>
 <body>
     <h1>Formularz tworzenia pliku konfiguracyjnego</h1>
-    <form method="POST" action="{{ url_for('submit_form') }}" enctype="multipart/form-data">
+    <form method="POST" action="/api/createconf" enctype="multipart/form-data">
         <label>Nazwa konfiguracji:</label><br>
         <input type="text" name="config_name" required><br><br>
         <label>Nazwa tokenu:</label><br>
