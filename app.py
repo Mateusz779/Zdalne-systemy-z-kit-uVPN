@@ -25,11 +25,11 @@ def main():
 
 @app.route('/login')
 def login():
-    try:
-        if request.get_data()["incorrect"]:
-            return render_template('login.html', incorrect="Incorrect username or password!")  
-    except:
-        pass
+    auth_token = request.cookies.get('auth_token')
+    if auth_token != "" or auth_token is not None:
+        if db.get_user_bytoken(auth_token) is not None:
+            return render_template('index.html')
+        
     return render_template('login.html')
 
 @app.route('/api/login', methods=['POST'])
@@ -39,13 +39,10 @@ def login_api():
 
     auth_token = db.login(username, password)
     if auth_token is None:
-        response = make_response(redirect("/login"))
-        response.set_data({"incorrect":"Incorrect username or password!"})
-        return response
+        return render_template('login.html', incorrect="Incorrect username or password!")
     
     response = make_response(render_template('index.html'))
     response.set_cookie('auth_token', auth_token)
-
     return response
 
 
