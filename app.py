@@ -43,7 +43,7 @@ def login_api():
     if auth_token is None:
         return render_template('login.html', incorrect="Incorrect username or password!")
     
-    response = make_response(render_template('index.html'))
+    response = make_response(redirect('/'))
     response.set_cookie('auth_token', auth_token)
     return response
 
