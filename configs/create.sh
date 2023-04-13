@@ -93,8 +93,8 @@ cd /tmp/output
 mkdir configs
 mv * configs
 mkdir "$CONFIGS/squash"
-mksquashfs . "$CONFIGS/squash/$name.squashfs"
-cp "/tmp/output/configs/vpn/$name.pub" "$CONFIGS/squash/$name.pub"
+mksquashfs . $CONFIGS/squash/"$name.squashfs"
+cp /tmp/output/configs/vpn/"$name.pub" $CONFIGS/squash/"$name.pub"
 
 echo "$name"
 
