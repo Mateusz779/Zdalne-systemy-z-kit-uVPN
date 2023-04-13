@@ -92,10 +92,9 @@ sed -i '1s/.*/['"$name"']/' /tmp/output/vpn/$(basename "$ini")
 cd /tmp/output
 mkdir configs
 mv * configs
-mkdir $CONFIGS/squash
-mkdir $CONFIGS/squash/$name
-mksquashfs . $CONFIGS/squash/$name.squashfs
-cp /tmp/output/configs/vpn/$name.pub $CONFIGS/squash/$name.pub
+mkdir "$CONFIGS/squash"
+mksquashfs . "$CONFIGS/squash/$name.squashfs"
+cp "/tmp/output/configs/vpn/$name.pub" "$CONFIGS/squash/$name.pub"
 
 echo "$name"
 
