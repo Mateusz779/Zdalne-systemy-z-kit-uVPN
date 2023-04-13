@@ -113,8 +113,8 @@ def add_auth_token(user_id):
     connect()
     with get_cur() as cur:
         cur.execute("""
-            INSERT INTO auth_tokens (user_id, token)
-            VALUES (%s, %s)
+            INSERT INTO auth_tokens (user_id, token, expries_on)
+            VALUES (%s, %s, NOW() + INTERVAL '1 day')
         """,(user_id,token,))
         conn.commit()
     return token
