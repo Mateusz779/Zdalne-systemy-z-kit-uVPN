@@ -261,6 +261,18 @@ def del_image_allocation_token(token):
         except:
             return None
 
+def del_image_allocation_id_image(id_image):
+    connect()
+    with get_cur() as cur:
+        cur.execute("""
+            DELETE FROM image_allocation WHERE id_image = %s 
+        """,(id_image,))
+        try:
+            conn.commit()
+            return True
+        except:
+            return None
+
 def del_image_allocation_id(id):    
     connect()
     with get_cur() as cur:
