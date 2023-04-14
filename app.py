@@ -170,5 +170,13 @@ def release_allocation():
     
     return jsonify(message="200")
 
+@app.route("/api/addip", methods=['POST'])
+def add_ip():
+    try:
+        token = request.headers['token']
+        ip = request.headers['ip']
+    except:
+        pass
+    print(token, ip)
 if __name__ == '__main__':
     app.run(host="0.0.0.0")
