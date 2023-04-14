@@ -162,9 +162,8 @@ def release_allocation():
             return jsonify(message="400")
     except:
         pass
-    print(id_allocation)
     if id_allocation is not None:
-        print(db.del_image_allocation_id_image(id_allocation))
+        db.del_image_allocation_id_image(id_allocation)
     else:
         return jsonify(message="404")
     
@@ -174,7 +173,7 @@ def release_allocation():
 def add_ip():
     try:
         token = request.headers['token']
-        ip = request.headers['ip']
+        ip = request.data['ip']
     except:
         pass
     print(token, ip)
