@@ -5,49 +5,15 @@ import db
 import os
 from werkzeug.utils import secure_filename
 import subprocess
-import threading
 import utils
 import shutil
+import config
 
 app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = "squash"
 app.config['MAX_CONTENT_LENGTH'] = 1024 * 1024 * 512 #512MB
 
-def ssh_thread_function():
-    subprocess.run(['wssh','--fbidhttp=False'])
-    
-ssh_thread = threading.Thread(target=ssh_thread_function)
-ssh_thread.start()
-
-class PingThread(threading.Thread):
-    def __init__(self, ip, id):
-        super(PingThread, self).__init__()
-        self.Ip = ip
-        self.Id = id
-    def run(self):
-        if utils.ping_client(self.Ip) == False:
-            date = db.get_image_allocation_time_id(self.Id)
-            if date is None:
-                return
-            delta = datetime.datetime.now() - date
-            if delta.total_seconds()  > 30:
-                db.del_image_allocation_id(self.Id)
-        else:
-            db.update_image_allocation_time(self.Id)
-
-def check_allocation_thread_function():
-    while True:
-        ids = db.get_image_allocation_all()
-        for x in ids:
-            ip = db.get_image_allocation_clientip_id(x[0])
-            ping_thread = PingThread(ip, x[0])
-            ping_thread.start()
-            
-        sleep(10)
-
-allocation_thread = threading.Thread(target=check_allocation_thread_function)
-allocation_thread.start()
-
+utils.init_threads()
 
 @app.route('/')
 def main():
@@ -184,6 +150,9 @@ def get_image():
         pass
 
     if filename is None or filename == "":
-        filename = "default.squashfs"
+        filename = config.default_file
         
     return send_file(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+
+if __name__ == '__main__':
+    app.run(host="0.0.0.0")
