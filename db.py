@@ -84,6 +84,17 @@ def get_conf_id(token):
             return cur.fetchone()[0]
         except:
             return None
+
+def get_conf_id_name(name):
+    connect()
+    with get_cur() as cur:
+        cur.execute("""
+            SELECT id FROM image WHERE image_name = %s
+        """,(name+".squashfs",))
+        try:
+            return cur.fetchone()[0]
+        except:
+            return None
     
 def add_user(username, password):
     connect()

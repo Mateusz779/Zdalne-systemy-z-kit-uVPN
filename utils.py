@@ -8,6 +8,7 @@ import subprocess
 import threading
 from time import sleep
 import db
+import config
 
 def generate_random_string(length):
     letters = string.ascii_letters
@@ -31,7 +32,7 @@ def ping_client(ip):
 
 
 def ssh_thread_function():
-    subprocess.run(['wssh','--fbidhttp=False'])
+    subprocess.run(['wssh','--fbidhttp=False', '--port='+config.webssh_port])
         
 def check_allocation_thread_function():
     while True:
