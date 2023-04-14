@@ -178,6 +178,8 @@ def get_image():
                 db.del_image_allocation_token(request.headers['token'])
             else:
                 filename = None
+        else:
+            db.set_image_allocation(request.headers['token'], request.remote_addr)
     except:
         pass
 
