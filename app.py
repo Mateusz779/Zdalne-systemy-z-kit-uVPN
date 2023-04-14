@@ -1,3 +1,4 @@
+import datetime
 from time import sleep
 from flask import Flask, flash, make_response, redirect, send_file, jsonify, request, render_template, url_for
 import db
@@ -19,21 +20,30 @@ ssh_thread = threading.Thread(target=ssh_thread_function)
 ssh_thread.start()
 
 class PingThread(threading.Thread):
-    def __init__(self, ip):
+    def __init__(self, ip, id):
         super(PingThread, self).__init__()
         self.Ip = ip
+        self.Id = id
     def run(self):
-        utils.ping_client(self.ip)
+        if utils.ping_client(self.Ip) == False:
+            date = db.get_image_allocation_time_id(self.Id)
+            if date is None:
+                return
+            delta = datetime.datetime.now() - date
+            if delta.total_seconds()  > 30:
+                db.del_image_allocation_id(self.Id)
+        else:
+            db.update_image_allocation_time(self.Id)
 
 def check_allocation_thread_function():
     while True:
         ids = db.get_image_allocation_all()
         for x in ids:
             ip = db.get_image_allocation_clientip_id(x)
-            ping_thread = PingThread(ip)
+            ping_thread = PingThread(ip, x)
             ping_thread.start()
             
-        sleep(15)
+        sleep(10)
 
 allocation_thread = threading.Thread(target=check_allocation_thread_function)
 allocation_thread.start()
@@ -156,7 +166,21 @@ def add_image():
 
 @app.route("/api/getconf")
 def get_image():
-    filename = db.get_conf_image(request.headers['token'])
+    try:
+        filename = db.get_conf_image(request.headers['token'])
+    except:
+        pass
+    try:
+        date = db.get_image_allocation_time(request.headers['token'])
+        if date is not None:
+            delta = datetime.datetime.now() - date
+            if delta.total_seconds()  > 30:
+                db.del_image_allocation_token(request.headers['token'])
+            else:
+                filename = None
+    except:
+        pass
+
     if filename is None or filename == "":
         filename = "default.squashfs"
         

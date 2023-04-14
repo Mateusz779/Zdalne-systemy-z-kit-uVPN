@@ -183,6 +183,17 @@ def get_image_allocation_time_imageid(image_id):
         except:
             return None
         
+def get_image_allocation_time_id(id):
+    connect()
+    with get_cur() as cur:
+        cur.execute("""
+            SELECT last_access_time FROM image_allocation WHERE id = %s 
+        """,(id,))
+        try:
+            return cur.fetchone()[0]
+        except:
+            return None
+        
 def get_image_allocation_clientip(token):
     id_image = get_conf_id(token)
     if id_image is None:
@@ -222,3 +233,43 @@ def set_image_allocation(token, client_ip):
         """,(id_image,client_ip,))
         conn.commit()
     return token
+
+def del_image_allocation_token(token):
+    id_image = get_conf_id(token)
+    if id_image is None:
+        return None 
+    
+    connect()
+    with get_cur() as cur:
+        cur.execute("""
+            DELETE FROM image_allocation WHERE id_image = %s 
+        """,(id_image,))
+        try:
+            conn.commit()
+            return True
+        except:
+            return None
+
+def del_image_allocation_id(id):    
+    connect()
+    with get_cur() as cur:
+        cur.execute("""
+            DELETE FROM image_allocation WHERE id = %s 
+        """,(id,))
+        try:
+            conn.commit()
+            return True
+        except:
+            return None
+        
+def update_image_allocation_time(id):    
+    connect()
+    with get_cur() as cur:
+        cur.execute("""
+            UPDATE SET last_access_time = NOW() FROM image_allocation WHERE id = %s 
+        """,(id,))
+        try:
+            conn.commit()
+            return True
+        except:
+            return None
