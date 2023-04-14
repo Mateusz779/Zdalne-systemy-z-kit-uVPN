@@ -150,7 +150,7 @@ def get_image_allocation_all():
     connect()
     with get_cur() as cur:
         cur.execute("""
-            SELECT image_id FROM image_allocation""")
+            SELECT id FROM image_allocation""")
         try:
             results = [list(row) for row in cur.fetchall()]
             return results

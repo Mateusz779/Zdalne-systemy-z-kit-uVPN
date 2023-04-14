@@ -38,9 +38,7 @@ class PingThread(threading.Thread):
 def check_allocation_thread_function():
     while True:
         ids = db.get_image_allocation_all()
-        print(ids)
         for x in ids:
-            print(x[0])
             ip = db.get_image_allocation_clientip_id(x[0])
             ping_thread = PingThread(ip, x[0])
             ping_thread.start()
