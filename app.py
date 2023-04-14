@@ -166,7 +166,7 @@ def release_allocation():
     if id_allocation is not None:
         db.del_image_allocation_id(id_allocation)
     else:
-        return jsonify(message="400")
+        return jsonify(message="404")
     
     return jsonify(message="200")
 
