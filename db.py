@@ -266,7 +266,7 @@ def update_image_allocation_time(id):
     connect()
     with get_cur() as cur:
         cur.execute("""
-            UPDATE SET last_access_time = NOW() FROM image_allocation WHERE id = %s 
+            UPDATE image_allocation SET last_access_time = NOW() WHERE id = %s 
         """,(id,))
         try:
             conn.commit()
