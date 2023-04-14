@@ -250,22 +250,13 @@ def del_image_allocation_token(token):
     if id_image is None:
         return None 
     
-    connect()
-    with get_cur() as cur:
-        cur.execute("""
-            DELETE FROM image_allocation WHERE id_image = %s 
-        """,(id_image,))
-        try:
-            conn.commit()
-            return True
-        except:
-            return None
+    return del_image_allocation_id_image(id_image)
 
 def del_image_allocation_id_image(id_image):
     connect()
     with get_cur() as cur:
         cur.execute("""
-            DELETE FROM image_allocation WHERE id_image = %s 
+            DELETE FROM image_allocation WHERE image_id = %s 
         """,(id_image,))
         try:
             conn.commit()
