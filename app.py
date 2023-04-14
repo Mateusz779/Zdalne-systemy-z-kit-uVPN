@@ -177,5 +177,6 @@ def add_ip():
     except:
         pass
     print(token, ip)
+    return
 if __name__ == '__main__':
     app.run(host="0.0.0.0")
