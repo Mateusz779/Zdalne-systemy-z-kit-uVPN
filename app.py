@@ -1,3 +1,4 @@
+from time import sleep
 from flask import Flask, flash, make_response, redirect, send_file, jsonify, request, render_template, url_for
 import db
 import os
@@ -16,6 +17,27 @@ def ssh_thread_function():
     
 ssh_thread = threading.Thread(target=ssh_thread_function)
 ssh_thread.start()
+
+class PingThread(threading.Thread):
+    def __init__(self, ip):
+        super(PingThread, self).__init__()
+        self.Ip = ip
+    def run(self):
+        utils.ping_client(self.ip)
+
+def check_allocation_thread_function():
+    while True:
+        ids = db.get_image_allocation_all()
+        for x in ids:
+            ip = db.get_image_allocation_clientip_id(x)
+            ping_thread = PingThread(ip)
+            ping_thread.start()
+            
+        sleep(15)
+
+allocation_thread = threading.Thread(target=check_allocation_thread_function)
+allocation_thread.start()
+
 
 @app.route('/')
 def main():

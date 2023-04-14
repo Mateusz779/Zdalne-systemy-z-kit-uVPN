@@ -2,6 +2,7 @@ import hashlib
 import secrets
 import string
 import random
+import os
 
 def generate_random_string(length):
     letters = string.ascii_letters
@@ -13,3 +14,11 @@ def hash_password(password):
 
 def generate_auth_token():
     return secrets.token_urlsafe(32)
+
+def ping_client(ip):
+    response = os.system("ping -c 1 " + ip)
+
+    if response == 0:
+        return True
+    else:
+        return False

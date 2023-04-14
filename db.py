@@ -17,7 +17,7 @@ def connect():
     
     with conn.cursor() as cur:
         cur.execute("""
-            CREATE TABLE IF NOT EXISTS vpn (
+            CREATE TABLE IF NOT EXISTS image (
                 id SERIAL PRIMARY KEY,
                 image_name VARCHAR(255) NOT NULL,
                 token VARCHAR(255) NOT NULL,
@@ -38,6 +38,14 @@ def connect():
                 created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
                 expires_on TIMESTAMP NOT NULL
             );""")
+        cur.execute("""
+            CREATE TABLE IF NOT EXISTS image_allocation (
+                id SERIAL PRIMARY KEY,
+                image_id INTEGER NOT NULL REFERENCES image(id),
+                allocation_time TIMESTAMP NOT NULL DEFAULT NOW(),
+                last_access_time TIMESTAMP,
+                client_ip INET
+            );""")
         conn.commit()
     
 def get_cur():
@@ -50,7 +58,7 @@ def add_conf_image(name, token):
     connect()
     with get_cur() as cur:
         cur.execute("""
-            INSERT INTO vpn (image_name, token)
+            INSERT INTO image (image_name, token)
             VALUES (%s, %s)
         """,(name, token,))
         conn.commit()
@@ -59,7 +67,18 @@ def get_conf_image(token):
     connect()
     with get_cur() as cur:
         cur.execute("""
-            SELECT image_name FROM vpn WHERE token = %s
+            SELECT image_name FROM image WHERE token = %s
+        """,(token,))
+        try:
+            return cur.fetchone()[0]
+        except:
+            return None
+        
+def get_conf_id(token):
+    connect()
+    with get_cur() as cur:
+        cur.execute("""
+            SELECT id FROM image WHERE token = %s
         """,(token,))
         try:
             return cur.fetchone()[0]
@@ -126,3 +145,80 @@ def login(username, password):
     else:
         return None
     
+    
+def get_image_allocation_all():
+    connect()
+    with get_cur() as cur:
+        cur.execute("""
+            SELECT image_id FROM image_allocation""")
+        try:
+            results = [list(row) for row in cur.fetchall()]
+            return results
+        except:
+            return None
+
+def get_image_allocation_time(token):
+    id_image = get_conf_id(token)
+    if id_image is None:
+        return None
+    
+    connect()
+    with get_cur() as cur:
+        cur.execute("""
+            SELECT last_access_time FROM image_allocation WHERE image_id = %s 
+        """,(id_image,))
+        try:
+            return cur.fetchone()[0]
+        except:
+            return None
+
+def get_image_allocation_time_imageid(image_id):
+    connect()
+    with get_cur() as cur:
+        cur.execute("""
+            SELECT last_access_time FROM image_allocation WHERE image_id = %s 
+        """,(image_id,))
+        try:
+            return cur.fetchone()[0]
+        except:
+            return None
+        
+def get_image_allocation_clientip(token):
+    id_image = get_conf_id(token)
+    if id_image is None:
+        return None
+    
+    connect()
+    with get_cur() as cur:
+        cur.execute("""
+            SELECT client_ip FROM image_allocation WHERE image_id = %s 
+        """,(id_image,))
+        try:
+            return cur.fetchone()[0]
+        except:
+            return None
+
+def get_image_allocation_clientip_id(id):    
+    connect()
+    with get_cur() as cur:
+        cur.execute("""
+            SELECT client_ip FROM image_allocation WHERE id = %s 
+        """,(id,))
+        try:
+            return cur.fetchone()[0]
+        except:
+            return None
+
+def set_image_allocation(token, client_ip):
+    id_image = get_conf_id(token)
+    if id_image is None:
+        return None
+    
+    connect()
+    with get_cur() as cur:
+        cur.execute("""
+            INSERT INTO image_allocation (image_id, client_ip, last_access_time)
+            VALUES (%s, %s, NOW())
+        """,(id_image,client_ip,))
+        conn.commit()
+    return token
