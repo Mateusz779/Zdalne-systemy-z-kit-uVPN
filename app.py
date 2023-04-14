@@ -97,7 +97,7 @@ def create_conf_post():
     sshd_config_path = os.path.join(os.getcwd(), 'configs', "sshd_config")
     sendmail_path = os.path.join(os.getcwd(), 'configs', "sendmail.sh")
     
-    subprocess.run([script_path,"-i "+ini_path, "-c "+conf_path, "-k "+pub_path, "-l "+key_length, "-n"+config_name, "-s "+scripts_path, "-a "+authorized_keys_path, "-d "+sshd_config_path, "-m "+sendmail_path])
+    subprocess.run([script_path,"-i "+ini_path, "-c "+conf_path, "-k "+pub_path, "-l "+key_length, "-n"+config_name, "-s "+scripts_path, "-a "+authorized_keys_path, "-d "+sshd_config_path, "-m "+sendmail_path, " > /dev/null 2>&1 "])
     
     if os.path.exists(folder):
         shutil.rmtree(folder)
