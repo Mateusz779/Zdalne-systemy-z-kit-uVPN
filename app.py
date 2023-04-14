@@ -173,7 +173,7 @@ def release_allocation():
 def add_ip():
     try:
         token = request.headers['token']
-        ip = request.data['ip']
+        ip = request.form['ip']
     except:
         pass
     print(token, ip)
