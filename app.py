@@ -162,9 +162,9 @@ def release_allocation():
             return jsonify(message="400")
     except:
         pass
-    
+    print(id_allocation)
     if id_allocation is not None:
-        db.del_image_allocation_id(id_allocation)
+        print(db.del_image_allocation_id(id_allocation))
     else:
         return jsonify(message="404")
     
