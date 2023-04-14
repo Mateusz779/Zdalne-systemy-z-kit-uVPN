@@ -16,7 +16,7 @@ def generate_auth_token():
     return secrets.token_urlsafe(32)
 
 def ping_client(ip):
-    response = os.system("ping -c 1 " + ip)
+    response = os.system("ping -c 1 " + ip + "> /dev/null")
 
     if response == 0:
         return True
