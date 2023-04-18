@@ -63,17 +63,17 @@ def add_conf_image(name, token):
         """,(name, token,))
         conn.commit()
         
-def get_conf(columns, param, value):
+def get_conf(sql,value):
     connect()
     with get_cur() as cur:
-        cur.execute(f"SELECT {columns} FROM image WHERE {param} = {value}")
+        cur.execute(sql,(value,))
         try:
             return cur.fetchone()[0]
         except:
             return None
 
 def get_conf_image(token):
-    return get_conf("image_name", "token", token)
+    return get_conf("SELECT image_name FROM image WHERE token = %s", token)
     # connect()
     # with get_cur() as cur:
     #     cur.execute("""
@@ -85,7 +85,7 @@ def get_conf_image(token):
     #         return None
         
 def get_conf_id(token):
-    return get_conf("id", "token", token)
+    return get_conf("SELECT id FROM image WHERE token = %s", token)
     # connect()
     # with get_cur() as cur:
     #     cur.execute("""
@@ -97,7 +97,7 @@ def get_conf_id(token):
     #         return None
 
 def get_conf_id_name(name):
-    return get_conf("id", "image_name", name)
+    return get_conf("SELECT id FROM image WHERE image_name = %s", name)
     # connect()
     # with get_cur() as cur:
     #     cur.execute("""
@@ -181,10 +181,10 @@ def get_image_allocation_all():
             return None
 
 
-def get_image_allocation(column, param, value):
+def get_image_allocation(sql, value):
     connect()
     with get_cur() as cur:
-        cur.execute(f"SELECT {column} FROM image_allocation WHERE {param} = {value} ")
+        cur.execute(sql, (value,))
         try:
             return cur.fetchone()[0]
         except:
@@ -198,7 +198,7 @@ def get_image_allocation_time(token):
     return get_image_allocation_time_imageid(image_id)
 
 def get_image_allocation_time_imageid(image_id):
-    get_image_allocation("last_access_time", "image_id", image_id)
+    get_image_allocation("SELECT last_access_time FROM image_allocation WHERE image_id = %s", image_id)
     # connect()
     # with get_cur() as cur:
     #     cur.execute("""
@@ -210,7 +210,7 @@ def get_image_allocation_time_imageid(image_id):
     #         return None
         
 def get_image_allocation_time_id(id):
-    get_image_allocation("last_access_time", "id", id)
+    get_image_allocation("SELECT last_access_time FROM image_allocation WHERE id = %s", id)
     # connect()
     # with get_cur() as cur:
     #     cur.execute("""
@@ -226,7 +226,7 @@ def get_image_allocation_clientip(token):
     if id_image is None:
         return None
     
-    get_image_allocation("client_ip", "image_id", id_image)
+    get_image_allocation("SELECT last_access_time FROM image_allocation WHERE id = %s", id_image)
     # connect()
     # with get_cur() as cur:
     #     cur.execute("""
@@ -269,12 +269,10 @@ def del_image_allocation_token(token):
     
     return del_image_allocation_id_image(id_image)
 
-def del_image_allocation(column, value):
+def del_image_allocation(sql, value):
     connect()
     with get_cur() as cur:
-        cur.execute("""
-            DELETE FROM image_allocation WHERE `%s` = %s 
-        """,(column,value, ))
+        cur.execute(sql, (value, ))
         try:
             conn.commit()
             return True
@@ -282,7 +280,7 @@ def del_image_allocation(column, value):
             return None
 
 def del_image_allocation_id_image(image_id):
-    return del_image_allocation("image_id", image_id)
+    return del_image_allocation("DELETE FROM image_allocation WHERE image_id = %s", image_id)
     # connect()
     # with get_cur() as cur:
     #     cur.execute("""
@@ -295,7 +293,7 @@ def del_image_allocation_id_image(image_id):
     #         return None
 
 def del_image_allocation_id(id): 
-    return del_image_allocation("id", id)   
+    return del_image_allocation("DELETE FROM image_allocation WHERE id = %s", id)   
     # connect()
     # with get_cur() as cur:
     #     cur.execute("""
