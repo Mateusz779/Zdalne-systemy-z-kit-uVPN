@@ -54,6 +54,15 @@ def get_cur():
 def get_conn():
     return conn
 
+def get_one(sql, value):
+    connect()
+    with get_cur() as cur:
+        cur.execute(sql,(value,))
+        try:
+            return cur.fetchone()[0]
+        except:
+            return None
+
 def add_conf_image(name, token):
     connect()
     with get_cur() as cur:
@@ -63,17 +72,17 @@ def add_conf_image(name, token):
         """,(name, token,))
         conn.commit()
         
-def get_conf(sql,value):
-    connect()
-    with get_cur() as cur:
-        cur.execute(sql,(value,))
-        try:
-            return cur.fetchone()[0]
-        except:
-            return None
+# def get_conf(sql,value):
+#     connect()
+#     with get_cur() as cur:
+#         cur.execute(sql,(value,))
+#         try:
+#             return cur.fetchone()[0]
+#         except:
+#             return None
 
 def get_conf_image(token):
-    return get_conf("SELECT image_name FROM image WHERE token = %s", token)
+    return get_one("SELECT image_name FROM image WHERE token = %s", token)
     # connect()
     # with get_cur() as cur:
     #     cur.execute("""
@@ -85,7 +94,7 @@ def get_conf_image(token):
     #         return None
         
 def get_conf_id(token):
-    return get_conf("SELECT id FROM image WHERE token = %s", token)
+    return get_one("SELECT id FROM image WHERE token = %s", token)
     # connect()
     # with get_cur() as cur:
     #     cur.execute("""
@@ -97,7 +106,7 @@ def get_conf_id(token):
     #         return None
 
 def get_conf_id_name(name):
-    return get_conf("SELECT id FROM image WHERE image_name = %s", name)
+    return get_one("SELECT id FROM image WHERE image_name = %s", name)
     # connect()
     # with get_cur() as cur:
     #     cur.execute("""
@@ -129,26 +138,29 @@ def get_user_pass(username, password):
             return None
 
 def get_user_byid(id):
-    connect()
-    with get_cur() as cur:
-        cur.execute("""
-            SELECT id FROM users WHERE id = %s
-        """,(id,))
-        try:
-            return cur.fetchone()[0]
-        except:
-            return None
+    return get_one("SELECT id FROM users WHERE id = %s", id)
+    # connect()
+    # with get_cur() as cur:
+    #     cur.execute("""
+    #         SELECT id FROM users WHERE id = %s
+    #     """,(id,))
+    #     try:
+    #         return cur.fetchone()[0]
+    #     except:
+    #         return None
 
 def get_user_bytoken(token):
-    connect()
-    with get_cur() as cur:
-        cur.execute("""
-            SELECT user_id FROM auth_tokens WHERE token = %s 
-        """,(token,))
-        try:
-            return cur.fetchone()[0]
-        except:
-            return None
+    return get_one("SELECT user_id FROM auth_tokens WHERE token = %s", token)
+
+    # connect()
+    # with get_cur() as cur:
+    #     cur.execute("""
+    #         SELECT user_id FROM auth_tokens WHERE token = %s 
+    #     """,(token,))
+    #     try:
+    #         return cur.fetchone()[0]
+    #     except:
+    #         return None
 
 def add_auth_token(user_id):
     token = utils.generate_auth_token()
@@ -194,11 +206,10 @@ def get_image_allocation_time(token):
     image_id = get_conf_id(token)
     if image_id is None:
         return None
-    
-    return get_image_allocation_time_imageid(image_id)
+    return get_one("SELECT last_access_time FROM image_allocation WHERE image_id = %s", image_id)
 
-def get_image_allocation_time_imageid(image_id):
-    get_image_allocation("SELECT last_access_time FROM image_allocation WHERE image_id = %s", image_id)
+# def get_image_allocation_time_imageid(image_id):
+#     get_image_allocation("SELECT last_access_time FROM image_allocation WHERE image_id = %s", image_id)
     # connect()
     # with get_cur() as cur:
     #     cur.execute("""
@@ -210,7 +221,7 @@ def get_image_allocation_time_imageid(image_id):
     #         return None
         
 def get_image_allocation_time_id(id):
-    get_image_allocation("SELECT last_access_time FROM image_allocation WHERE id = %s", id)
+    get_one("SELECT last_access_time FROM image_allocation WHERE id = %s", id)
     # connect()
     # with get_cur() as cur:
     #     cur.execute("""
@@ -226,7 +237,7 @@ def get_image_allocation_clientip(token):
     if id_image is None:
         return None
     
-    get_image_allocation("SELECT last_access_time FROM image_allocation WHERE id = %s", id_image)
+    return get_one("SELECT last_access_time FROM image_allocation WHERE id = %s", id_image)
     # connect()
     # with get_cur() as cur:
     #     cur.execute("""
@@ -237,16 +248,17 @@ def get_image_allocation_clientip(token):
     #     except:
     #         return None
 
-def get_image_allocation_clientip_id(id):    
-    connect()
-    with get_cur() as cur:
-        cur.execute("""
-            SELECT client_ip FROM image_allocation WHERE id = %s 
-        """,(id,))
-        try:
-            return cur.fetchone()[0]
-        except:
-            return None
+def get_image_allocation_clientip_id(id):
+    return get_one("SELECT client_ip FROM image_allocation WHERE id = %s", id)  
+    # connect()
+    # with get_cur() as cur:
+    #     cur.execute("""
+    #         SELECT client_ip FROM image_allocation WHERE id = %s 
+    #     """,(id,))
+    #     try:
+    #         return cur.fetchone()[0]
+    #     except:
+    #         return None
 
 def set_image_allocation(token, client_ip):
     id_image = get_conf_id(token)
