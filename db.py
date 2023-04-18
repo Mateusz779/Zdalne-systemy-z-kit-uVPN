@@ -66,9 +66,7 @@ def add_conf_image(name, token):
 def get_conf(columns, param, value):
     connect()
     with get_cur() as cur:
-        cur.execute("""
-            SELECT %s FROM image WHERE %s = %s
-        """,(columns, param, value,))
+        cur.execute(f"SELECT {columns} FROM image WHERE {param} = {value}")
         try:
             return cur.fetchone()[0]
         except:
@@ -186,9 +184,7 @@ def get_image_allocation_all():
 def get_image_allocation(column, param, value):
     connect()
     with get_cur() as cur:
-        cur.execute("""
-            SELECT %s FROM image_allocation WHERE %s = %s 
-        """,(column, param, value,))
+        cur.execute(f"SELECT {column} FROM image_allocation WHERE {param} = {value} ")
         try:
             return cur.fetchone()[0]
         except:
@@ -277,7 +273,7 @@ def del_image_allocation(column, value):
     connect()
     with get_cur() as cur:
         cur.execute("""
-            DELETE FROM image_allocation WHERE %s = %s 
+            DELETE FROM image_allocation WHERE `%s` = %s 
         """,(column,value, ))
         try:
             conn.commit()
