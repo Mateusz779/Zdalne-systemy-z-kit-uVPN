@@ -187,9 +187,11 @@ def add_ip():
         token = request.headers['token']
         ip = request.form['ip']
     except:
-        pass
-    print(token, ip)
-    return ""
+        return jsonify(message="400")
+    if db.update_image_allocation_ip(token, ip) is not None:
+        return jsonify(message="200")
+    else:
+        return jsonify(message="400")
 
 
 if __name__ == '__main__':
