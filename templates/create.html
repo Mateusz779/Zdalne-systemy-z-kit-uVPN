@@ -34,6 +34,7 @@ form label {
 /* styl dla pól formularza */
 form input[type="text"],
 form input[type="password"],
+form input[type="number"],
 form textarea {
   width: 100%;
   padding: 10px;
@@ -65,7 +66,8 @@ form button[type="submit"]:hover {
 {% endblock %}
 
 {% block content %}
-    <h1>Formularz tworzenia pliku konfiguracyjnego</h1>
+<br>
+    <h1>Formularz tworzenia obrazu konfiguracyjnego</h1>
     <form method="POST" action="/api/createconf" enctype="multipart/form-data">
         <label>Nazwa konfiguracji:</label><br>
         <input type="text" name="config_name" required><br><br>
