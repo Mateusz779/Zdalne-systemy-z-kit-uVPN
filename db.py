@@ -247,9 +247,7 @@ def del_image_allocation(sql, value):
 
 
 def del_image_allocation_id_image(image_id):
-    delete = del_image_allocation("DELETE FROM image_allocation WHERE image_id = %s", image_id)
-    print(delete)
-    return delete
+    return del_image_allocation("DELETE FROM image_allocation WHERE image_id = %s", image_id)
 
 
 def del_image_allocation_id(id):
@@ -268,12 +266,15 @@ def update_image_allocation_time(id):
         except:
             return None
 
-def update_image_allocation_ip(id, ip):
+def update_image_allocation_ip(token, ip):
+    image_id = get_conf_id(token)
+    if image_id is None:
+        return None
     connect()
     with get_cur() as cur:
         cur.execute("""
-            UPDATE image_allocation SET ip = %s WHERE id = %s 
-        """, (ip, id,))
+            UPDATE image_allocation SET ip = %s WHERE image_id = %s 
+        """, (ip, image_id,))
         try:
             conn.commit()
             return True
