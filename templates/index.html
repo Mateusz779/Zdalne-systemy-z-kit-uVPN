@@ -87,13 +87,12 @@
 		function ssh(ipvpn, username, password) {
             
             const currentLocation = window.location;
-            console.log("dziala");
             // budowanie nowego URL
             const newUrl = currentLocation.protocol + '//' + currentLocation.hostname + ':' + {{ ssh_port }} + "/?hostname="+ipvpn+"&username="+username+"&password="+btoa(password);
             console.log(newUrl);
 
             // przekierowanie na nowy URL
-            window.location.replace(newUrl);
+            window.open(newUrl,"_blank");
 		}
 	</script>
 </body>
