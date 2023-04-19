@@ -24,7 +24,7 @@ def main():
         if db.get_user_bytoken(auth_token) is None:
             return redirect("/login")
     machines_all = db.get_machines()
-    return render_template('index.html', ssh_port=config.webssh_port, table=machines_all)
+    return render_template('index.html', ssh_port=config.webssh_port, machines=machines_all)
 
 
 @app.route('/login')

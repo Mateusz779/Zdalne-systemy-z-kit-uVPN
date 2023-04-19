@@ -60,7 +60,27 @@
 </head>
 <body>
 	<h1>Lista maszyn</h1>
-    {{table}}
+	<table>
+		<thead>
+			<tr>
+				<th>Nazwa maszyny</th>
+				<th>Obraz</th>
+				<th>Czas uruchomienia</th>
+                <th>IP uVPN</th>
+				<th></th>
+			</tr>
+		</thead>
+		<tbody>
+			{% for machine in machines %}
+				<tr>
+					<td>{{ machine.name }}</td>
+					<td>{{ machine.image_name }}</td>
+					<td>{{ machine.start_time }}</td>
+                    <td>{{ machine.ip }}</td>
+					<td><button onclick="ssh('{{ machine.ip, machine.username, machine.password }}')">SSH</button></td>
+				</tr>
+			{% endfor %}
+		</tbody>
 	</table>
 
 	<script>
