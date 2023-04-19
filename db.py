@@ -17,7 +17,7 @@ def connect():
     cur = conn.cursor()
 
     with conn.cursor() as cur:
-        cur.execute("SET TIMEZONE='UTC';")
+        cur.execute("SET TIMEZONE='%s'",(config.timezone,))
         conn.commit()
         cur.execute("""
             CREATE TABLE IF NOT EXISTS image (

@@ -2,6 +2,7 @@
 <html>
 <head>
 	<title>Panel administracyjny</title>
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
 	<style>
 		body {
 			font-family: Arial, sans-serif;
@@ -59,42 +60,39 @@
 	</style>
 </head>
 <body>
-	<h1>Lista maszyn</h1>
-	<table>
-		<thead>
-			<tr>
-				<th>Nazwa maszyny</th>
-				<th>Obraz</th>
-				<th>Czas uruchomienia</th>
-                <th>IP uVPN</th>
-				<th>IP lokalne</th>
-				<th></th>
-			</tr>
-		</thead>
-		<tbody>
-			{% for machine in machines %}
+	<div class="container">
+		<h1 class="my-5">Lista maszyn</h1>
+		<table class="table table-striped table-hover">
+			<thead>
 				<tr>
-					<td>{{ machine.name }}</td>
-					<td>{{ machine.image_name }}</td>
-					<td>{{ machine.start_time }}</td>
-                    <td>{{ machine.ipvpn }}</td>
-					<td>{{ machine.iplocal }}</td>
-					<td><button onclick="ssh('{{ machine.ipvpn }}', '{{ machine.username }}', '{{ machine.password }}')">SSH</button></td>
+					<th>Nazwa maszyny</th>
+					<th>Obraz</th>
+					<th>Czas uruchomienia</th>
+					<th>IP uVPN</th>
+					<th>IP lokalne</th>
+					<th></th>
 				</tr>
-			{% endfor %}
-		</tbody>
-	</table>
+			</thead>
+			<tbody>
+				{% for machine in machines %}
+					<tr>
+						<td>{{ machine.name }}</td>
+						<td>{{ machine.image_name }}</td>
+						<td>{{ machine.start_time }}</td>
+						<td>{{ machine.ipvpn }}</td>
+						<td>{{ machine.iplocal }}</td>
+						<td><button class="btn btn-primary" onclick="ssh('{{ machine.ipvpn }}', '{{ machine.username }}', '{{ machine.password }}')">SSH</button></td>
+					</tr>
+				{% endfor %}
+			</tbody>
+		</table>
+	</div>
 
 	<script>
 		function ssh(ipvpn, username, password) {
-            
-            const currentLocation = window.location;
-            // budowanie nowego URL
-            const newUrl = currentLocation.protocol + '//' + currentLocation.hostname + ':' + {{ ssh_port }} + "/?hostname="+ipvpn+"&username="+username+"&password="+btoa(password);
-            console.log(newUrl);
-
-            // przekierowanie na nowy URL
-            window.open(newUrl,"_blank");
+			const currentLocation = window.location;
+			const newUrl = currentLocation.protocol + '//' + currentLocation.hostname + ':' + {{ ssh_port }} + "/?hostname="+ipvpn+"&username="+username+"&password="+btoa(password);
+			window.open(newUrl,"_blank");
 		}
 	</script>
 </body>
