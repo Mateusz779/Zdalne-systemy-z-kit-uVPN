@@ -4,9 +4,9 @@ echo "Parametry podane do skryptu: $@"
 kitcrypto_version="0.0.3"
 uvpn3_version="3.0.3"
 
-usage() { echo "Usage: [-a <root ssh authorized_keys>] [-b add executable to output] [-c <conf file>] [-d <sshd_config>] [-i <ini config>] [-k <pub server key>] [-l <priv key lenght>] [-m <msmtp script>] [-n <name>] [-s <dir with scripts>]" 1>&2; exit 1; }
+usage() { echo "Usage: [-a <root ssh authorized_keys>] [-b add executable to output] [-c <conf file>] [-d <sshd_config>] [-i <ini config>] [-k <pub server key>] [-l <priv key lenght>] [-m <msmtp script>] [-n <name>] [-p <vpn ipaddress>]" 1>&2; exit 1; }
 
-while getopts "a:b:c:d:e:i:k:l:m:n:s:" option
+while getopts "a:b:c:d:e:i:k:l:m:n:p:" option
 do
     case "${option}"
         in
@@ -19,7 +19,7 @@ do
           l)keylen=${OPTARG};;
           m)msmtp=${OPTARG};;
           n)name=${OPTARG};;
-          s)scripts=${OPTARG};;
+          p)ip=${OPTARG};;
           *)usage;;
     esac
 done
@@ -66,9 +66,6 @@ cd $CONFIGS
 cp $conf /tmp/output/vpn
 cp $ini /tmp/output/vpn
 cp $key /tmp/output/vpn
-if [ -n "$scripts" ]; then
-  cp -r $scripts /tmp/output/vpn
-fi
 
 if [ -n "$akeys" ]; then
   cp  $akeys /tmp/output/ssh
@@ -83,8 +80,24 @@ if [ -n "$msmtp" ]; then
   cp  $msmtp /tmp/output/msmtp
 fi
 
+mkdir /tmp/output/vpn/scripts
+cat <<EOF> /tmp/output/vpn/scripts/starttap.sh
 
-sed -i '/^private_key/c\private_key uVPN.priv' /tmp/output/vpn/$(basename "$conf") 
+#!/bin/sh
+ifconfig uvpnT2 $ip netmask 255.255.255.0 up
+EOF
+
+cat <<EOF> /tmp/output/vpn/scripts/arpinggw.sh
+
+#!/bin/sh
+ip -s -s neigh flush all dev uvpnT2
+EOF
+
+chmod +x /tmp/output/vpn/scripts/starttap.sh
+chmod +x /tmp/output/vpn/scripts/arpinggw.sh
+
+sed -i '/^private_key/c\private_key uVPN.priv' /tmp/output/vpn/$(basename "$conf")
+sed -i '/^tap_name/c\tap_name uvpnT2' /tmp/output/vpn/$(basename "$conf")
 sed -i '/^name/c\name '"$name" /tmp/output/vpn/$(basename "$conf")
 sed -i '/^servers_config/c\servers_config '"$(basename "$ini")" /tmp/output/vpn/$(basename "$conf")
 sed -i '1s/.*/['"$name"']/' /tmp/output/vpn/$(basename "$ini")

@@ -61,6 +61,7 @@ def create_conf_post():
     config_name = request.form['config_name']
     token_name = request.form['token_name']
     key_length = request.form['key_length']
+    ip = request.form['ip']
     folder = utils.generate_random_string(5)
     try:
         os.mkdir(os.path.join(os.getcwd(), 'configs', folder))
@@ -76,14 +77,13 @@ def create_conf_post():
     ini_path = os.path.join(os.getcwd(), 'configs', "uVPN.ini")
     conf_path = os.path.join(os.getcwd(), 'configs', "uVPN.conf")
     pub_path = os.path.join(os.getcwd(), 'configs', "server.pub")
-    scripts_path = os.path.join(os.getcwd(), 'configs', "scripts/")
     authorized_keys_path = os.path.join(
         os.getcwd(), 'configs', folder, "authorized_keys")
     sshd_config_path = os.path.join(os.getcwd(), 'configs', "sshd_config")
     sendmail_path = os.path.join(os.getcwd(), 'configs', "sendmail.sh")
 
     subprocess.run([script_path, "-i "+ini_path, "-c "+conf_path, "-k "+pub_path, "-l "+key_length, "-n"+config_name,
-                   "-s "+scripts_path, "-a "+authorized_keys_path, "-d "+sshd_config_path, "-m "+sendmail_path, " > /dev/null 2>&1 "])
+                   "-p "+ip, "-a "+authorized_keys_path, "-d "+sshd_config_path, "-m "+sendmail_path, " > /dev/null 2>&1 "])
 
     if os.path.exists(folder):
         shutil.rmtree(folder)
