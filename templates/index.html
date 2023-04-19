@@ -79,7 +79,7 @@
 					<td>{{ machine.start_time }}</td>
                     <td>{{ machine.ipvpn }}</td>
 					<td>{{ machine.iplocal }}</td>
-					<td><button onclick="ssh('{{ machine.ip }}', '{{ machine.username }}', '{{ machine.password }}')">SSH</button></td>
+					<td><button onclick="ssh('{{ machine.ipvpn }}', '{{ machine.username }}', '{{ machine.password }}')">SSH</button></td>
 				</tr>
 			{% endfor %}
 		</tbody>
