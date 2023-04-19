@@ -1,7 +1,7 @@
 import psycopg2
 import config
 import utils
-
+import machines
 
 def connect():
     global cur, conn
@@ -139,8 +139,23 @@ def login(username, password):
     else:
         return None
 
+def get_machines():
+    connect()
+    with get_cur() as cur:
+        cur.execute("""
+            SELECT image_id, allocation_time, client_ip FROM image_allocation""")
+        try:
+            machinesall = machines.MachineManager()
+            for row in cur.fetchall():
+                token = get_one("SELECT token FROM image WHERE id = %s", row[0])
+                image_name = get_one("SELECT image_name FROM image WHERE id = %s", row[0])
+                machine = machines.Machine(token, image_name, start_time=row[1], ip=row[2], username="root", password="")
+                machinesall.add_machine(machine)
+            return machinesall
+        except:
+            return None
 
-def get_image_allocation_all():
+def get_image_allocation_all_id():
     connect()
     with get_cur() as cur:
         cur.execute("""
@@ -151,6 +166,18 @@ def get_image_allocation_all():
         except:
             return None
 
+
+
+def get_image_allocation_all():
+    connect()
+    with get_cur() as cur:
+        cur.execute("""
+            SELECT * FROM image_allocation""")
+        try:
+            results = [list(row) for row in cur.fetchall()]
+            return results
+        except:
+            return None
 
 def get_image_allocation(sql, value):
     connect()

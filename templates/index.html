@@ -1,12 +1,79 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+	<title>Panel administracyjny</title>
+	<style>
+		body {
+			font-family: Arial, sans-serif;
+			background-color: #f5f5f5;
+			margin: 0;
+			padding: 0;
+		}
+
+		h1 {
+			font-size: 32px;
+			font-weight: bold;
+			color: #333;
+			margin: 20px 0;
+		}
+
+		table {
+			border-collapse: collapse;
+			margin: 20px 0;
+			width: 100%;
+		}
+
+		table th, table td {
+			padding: 10px;
+			text-align: left;
+			vertical-align: middle;
+			border: 1px solid #ccc;
+		}
+
+		table th {
+			background-color: #eee;
+			font-weight: bold;
+		}
+
+		table tr:hover {
+			background-color: #f0f0f0;
+		}
+
+		button {
+			background-color: #4CAF50;
+			border: none;
+			color: white;
+			padding: 10px 20px;
+			text-align: center;
+			text-decoration: none;
+			display: inline-block;
+			font-size: 16px;
+			margin: 10px 0;
+			cursor: pointer;
+		}
+
+		button:hover {
+			background-color: #3e8e41;
+		}
+
+	</style>
 </head>
 <body>
-    
+	<h1>Lista maszyn</h1>
+    {{table}}
+	</table>
+
+	<script>
+		function ssh(ipvpn, username, password) {
+            
+            const currentLocation = window.location;
+
+            // budowanie nowego URL
+            const newUrl = currentLocation.protocol + '//' + currentLocation.hostname + ':' + ssh_port + "/?hostname="+ipvpn+"&username="+username+"&password="+btoa(password);
+
+            // przekierowanie na nowy URL
+            window.location.replace(newUrl);
+		}
+	</script>
 </body>
 </html>
