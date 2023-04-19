@@ -36,6 +36,16 @@ def login():
             return render_template('index.html', ssh_port=config.webssh_port, machines=machines_all.machines, timezone=config.timezone)
     return render_template('login.html')
 
+@app.route('/logout')
+def logout():
+    auth_token = request.cookies.get('auth_token')
+    if auth_token != "" or auth_token is not None:
+        if db.get_user_bytoken(auth_token) is not None:
+            db.del_auth_token(auth_token)
+            response = make_response(redirect('/'))
+            response.delete_cookie('auth_token')
+            return response
+    return render_template('login.html')
 
 @app.route('/create/conf')
 def create_conf():

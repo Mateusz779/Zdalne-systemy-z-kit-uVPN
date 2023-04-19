@@ -138,6 +138,18 @@ def add_auth_token(user_id):
     return token
 
 
+def del_auth_token(token):
+    connect()
+    with get_cur() as cur:
+        cur.execute("DELETE FROM auth_tokens WHERE token = %s", (token, ))
+        try:
+            conn.commit()
+            return True
+        except:
+            return None
+
+
+
 def login(username, password):
     user_id = get_user_pass(username, password)
     if user_id is not None:
