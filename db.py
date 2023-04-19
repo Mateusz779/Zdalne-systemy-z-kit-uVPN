@@ -225,14 +225,8 @@ def get_image_allocation_all():
         except:
             return None
 
-def get_image_allocation(sql, value):
-    connect()
-    with get_cur() as cur:
-        cur.execute(sql, (value,))
-        try:
-            return cur.fetchone()[0]
-        except:
-            return None
+def get_image_allocation(image_id):
+    return get_one("SELECT id FROM image_allocation WHERE image_id = %s", image_id)
 
 
 def get_image_allocation_time(token):
@@ -243,7 +237,7 @@ def get_image_allocation_time(token):
 
 
 def get_image_allocation_time_id(id):
-    get_one("SELECT last_access_time FROM image_allocation WHERE id = %s", id)
+    return get_one("SELECT last_access_time FROM image_allocation WHERE id = %s", id)
 
 
 def get_image_allocation_clientip(token):

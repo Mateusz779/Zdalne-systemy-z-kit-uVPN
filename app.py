@@ -133,6 +133,8 @@ def delete(image_id):
         if db.get_user_bytoken(auth_token) is None:
             return redirect("/login")
         
+    if db.get_image_allocation_all_id() is not None:
+        return jsonify(message="409")
     filename = db.get_conf_image_id(image_id)
     squashfs = os.path.join(app.config['UPLOAD_FOLDER'], filename)
     pubkey = os.path.join(app.config['UPLOAD_FOLDER'], filename.split(".")[0])
