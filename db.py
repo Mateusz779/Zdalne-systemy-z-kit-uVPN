@@ -17,6 +17,8 @@ def connect():
     cur = conn.cursor()
 
     with conn.cursor() as cur:
+        cur.execute("SET TIMEZONE='UTC';")
+        conn.commit()
         cur.execute("""
             CREATE TABLE IF NOT EXISTS image (
                 id SERIAL PRIMARY KEY,
@@ -24,6 +26,7 @@ def connect():
                 token VARCHAR(255) NOT NULL,
                 created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
             );""")
+        conn.commit()
         cur.execute("""
             CREATE TABLE IF NOT EXISTS users (
                 id SERIAL PRIMARY KEY,
@@ -31,6 +34,7 @@ def connect():
                 password VARCHAR(256) NOT NULL,
                 created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
             );""")
+        conn.commit()
         cur.execute("""
             CREATE TABLE IF NOT EXISTS auth_tokens (
                 id SERIAL PRIMARY KEY,
@@ -39,11 +43,12 @@ def connect():
                 created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
                 expires_on TIMESTAMP NOT NULL
             );""")
+        conn.commit()
         cur.execute("""
             CREATE TABLE IF NOT EXISTS image_allocation (
                 id SERIAL PRIMARY KEY,
                 image_id INTEGER NOT NULL REFERENCES image(id),
-                allocation_time TIMESTAMP NOT NULL DEFAULT NOW(),
+                allocation_time TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
                 last_access_time TIMESTAMP,
                 client_ip INET
             );""")
@@ -126,7 +131,7 @@ def add_auth_token(user_id):
     with get_cur() as cur:
         cur.execute("""
             INSERT INTO auth_tokens (user_id, token, expires_on)
-            VALUES (%s, %s, NOW() + INTERVAL '1 day')
+            VALUES (%s, %s, CURRENT_TIMESTAMP + INTERVAL '1 day')
         """, (user_id, token,))
         conn.commit()
     return token
@@ -221,7 +226,7 @@ def set_image_allocation(token, client_ip):
     with get_cur() as cur:
         cur.execute("""
             INSERT INTO image_allocation (image_id, client_ip, last_access_time)
-            VALUES (%s, %s, NOW())
+            VALUES (%s, %s, CURRENT_TIMESTAMP)
         """, (id_image, client_ip,))
         conn.commit()
     return token
@@ -258,7 +263,7 @@ def update_image_allocation_time(id):
     connect()
     with get_cur() as cur:
         cur.execute("""
-            UPDATE image_allocation SET last_access_time = NOW() WHERE id = %s 
+            UPDATE image_allocation SET last_access_time = CURRENT_TIMESTAMP WHERE id = %s 
         """, (id,))
         try:
             conn.commit()
