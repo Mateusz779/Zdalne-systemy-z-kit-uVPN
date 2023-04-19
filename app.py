@@ -24,7 +24,7 @@ def main():
         if db.get_user_bytoken(auth_token) is None:
             return redirect("/login")
     machines_all = db.get_machines()
-    return render_template('index.html', ssh_port=config.webssh_port, machines=machines_all.machines)
+    return render_template('index.html', ssh_port=config.webssh_port, machines=machines_all.machines, timezone=config.timezone)
 
 
 @app.route('/login')
@@ -32,7 +32,8 @@ def login():
     auth_token = request.cookies.get('auth_token')
     if auth_token != "" or auth_token is not None:
         if db.get_user_bytoken(auth_token) is not None:
-            return render_template('index.html')
+            machines_all = db.get_machines()
+            return render_template('index.html', ssh_port=config.webssh_port, machines=machines_all.machines, timezone=config.timezone)
     return render_template('login.html')
 
 
