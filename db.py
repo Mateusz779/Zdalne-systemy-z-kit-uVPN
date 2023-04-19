@@ -89,6 +89,9 @@ def get_conf_image(token):
     return get_one("SELECT image_name FROM image WHERE token = %s", token)
 
 
+def get_conf_image_id(id):
+    return get_one("SELECT image_name FROM image WHERE id = %s", id)
+
 def get_conf_id(token):
     return get_one("SELECT id FROM image WHERE token = %s", token)
 
@@ -188,6 +191,16 @@ def get_images():
             return images_all
         except:
             return None
+        
+def del_image(image_id):
+    connect()
+    with get_cur() as cur:
+        cur.execute("DELETE FROM image WHERE id = %s", (image_id,))
+        try:
+            conn.commit()
+            return True
+        except:
+            return None
 
 def get_image_allocation_all_id():
     connect()
@@ -199,7 +212,6 @@ def get_image_allocation_all_id():
             return results
         except:
             return None
-
 
 
 def get_image_allocation_all():

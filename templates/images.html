@@ -21,7 +21,7 @@
                     <td>{{ image.token }}</td>
                     <td>{{ image.name }}</td>
                     <td>
-                        <form method="post" action="/api/delete_image/{{ image.id }}">
+                        <form action="{{ url_for('delete', image_id=image.id) }}" method="post">
                             <button type="submit" class="btn btn-danger">Usuń</button>
                         </form>
                     </td>
