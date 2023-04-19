@@ -189,7 +189,7 @@ def add_ip():
         ip = request.form['ip']
     except:
         return jsonify(message="400")
-    if db.update_image_allocation_ip(token, ip) is not None:
+    if db.update_image_allocation_ip_vpn(token, ip) is not None:
         return jsonify(message="200")
     else:
         return jsonify(message="400")

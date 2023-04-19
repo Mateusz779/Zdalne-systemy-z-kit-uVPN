@@ -42,7 +42,7 @@ def check_allocation_thread_function():
     while True:
         ids = db.get_image_allocation_all()
         for x in ids:
-            ip = db.get_image_allocation_clientip_id(x[0])
+            ip = db.get_image_allocation_clientip_id_vpn(x[0])
             ping_thread = PingThread(ip, x[0])
             ping_thread.start()
 

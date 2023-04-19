@@ -50,7 +50,8 @@ def connect():
                 image_id INTEGER NOT NULL REFERENCES image(id),
                 allocation_time TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
                 last_access_time TIMESTAMP,
-                client_ip INET
+                client_ip_local INET,
+                client_ip_vpn INET
             );""")
         conn.commit()
 
@@ -148,13 +149,13 @@ def get_machines():
     connect()
     with get_cur() as cur:
         cur.execute("""
-            SELECT image_id, allocation_time, client_ip FROM image_allocation""")
+            SELECT image_id, allocation_time, client_ip_vpn, client_ip_local FROM image_allocation""")
         try:
             machinesall = machines.MachineManager()
             for row in cur.fetchall():
                 token = get_one("SELECT token FROM image WHERE id = %s", row[0])
                 image_name = get_one("SELECT image_name FROM image WHERE id = %s", row[0])
-                machine = machines.Machine(token, image_name, start_time=row[1], ip=row[2], username="root", password="")
+                machine = machines.Machine(token, image_name, start_time=row[1], ipvpn=row[2], iplocal=row[3], username="root", password="")
                 machinesall.add_machine(machine)
             return machinesall
         except:
@@ -213,8 +214,8 @@ def get_image_allocation_clientip(token):
     return get_one("SELECT last_access_time FROM image_allocation WHERE id = %s", id_image)
 
 
-def get_image_allocation_clientip_id(id):
-    return get_one("SELECT client_ip FROM image_allocation WHERE id = %s", id)
+def get_image_allocation_clientip_id_vpn(id):
+    return get_one("SELECT client_ip_vpn FROM image_allocation WHERE id = %s", id)
 
 
 def set_image_allocation(token, client_ip):
@@ -225,7 +226,7 @@ def set_image_allocation(token, client_ip):
     connect()
     with get_cur() as cur:
         cur.execute("""
-            INSERT INTO image_allocation (image_id, client_ip, last_access_time)
+            INSERT INTO image_allocation (image_id, client_ip_local, last_access_time)
             VALUES (%s, %s, CURRENT_TIMESTAMP)
         """, (id_image, client_ip,))
         conn.commit()
@@ -271,14 +272,14 @@ def update_image_allocation_time(id):
         except:
             return None
 
-def update_image_allocation_ip(token, ip):
+def update_image_allocation_ip_vpn(token, ip):
     image_id = get_conf_id(token)
     if image_id is None:
         return None
     connect()
     with get_cur() as cur:
         cur.execute("""
-            UPDATE image_allocation SET client_ip = %s WHERE image_id = %s 
+            UPDATE image_allocation SET client_ip_vpn = %s WHERE image_id = %s 
         """, (ip, image_id,))
         try:
             conn.commit()

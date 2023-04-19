@@ -67,6 +67,7 @@
 				<th>Obraz</th>
 				<th>Czas uruchomienia</th>
                 <th>IP uVPN</th>
+				<th>IP lokalne</th>
 				<th></th>
 			</tr>
 		</thead>
@@ -76,7 +77,8 @@
 					<td>{{ machine.name }}</td>
 					<td>{{ machine.image_name }}</td>
 					<td>{{ machine.start_time }}</td>
-                    <td>{{ machine.ip }}</td>
+                    <td>{{ machine.ipvpn }}</td>
+					<td>{{ machine.iplocal }}</td>
 					<td><button onclick="ssh('{{ machine.ip }}', '{{ machine.username }}', '{{ machine.password }}')">SSH</button></td>
 				</tr>
 			{% endfor %}
