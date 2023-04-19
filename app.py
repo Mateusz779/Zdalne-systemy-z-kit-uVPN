@@ -47,7 +47,16 @@ def logout():
             return response
     return render_template('login.html')
 
-@app.route('/create/conf')
+@app.route('/images')
+def list_images():
+    auth_token = request.cookies.get('auth_token')
+    if auth_token != "" or auth_token is not None:
+        if db.get_user_bytoken(auth_token) is None:
+            return redirect("/login")
+    images_all = db.get_images()
+    return render_template("images.html", images=images_all)
+
+@app.route('/create')
 def create_conf():
     auth_token = request.cookies.get('auth_token')
     if auth_token != "" or auth_token is not None:

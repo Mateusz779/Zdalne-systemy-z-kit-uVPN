@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% block title %}Obrazy{% endblock %}
+{% block style %}
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h1 class="my-4">Lista obrazów</h1>
+    
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Token</th>
+                <th>Nazwa</th>
+                <th>Usuń</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for image in images %}
+                <tr>
+                    <td>{{ image.token }}</td>
+                    <td>{{ image.name }}</td>
+                    <td>
+                        <form method="post" action="/api/delete_image/{{ image.id }}">
+                            <button type="submit" class="btn btn-danger">Usuń</button>
+                        </form>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

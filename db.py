@@ -2,6 +2,7 @@ import psycopg2
 import config
 import utils
 import machines
+import images
 
 def connect():
     global cur, conn
@@ -170,6 +171,21 @@ def get_machines():
                 machine = machines.Machine(token, image_name, start_time=row[1], ipvpn=row[2], iplocal=row[3], username="root", password="")
                 machinesall.add_machine(machine)
             return machinesall
+        except:
+            return None
+        
+        
+def get_images():
+    connect()
+    with get_cur() as cur:
+        cur.execute("""
+            SELECT id, token, image_name FROM image""")
+        try:
+            images_all = images.ImageManager()
+            for row in cur.fetchall():
+                image = images.Image(id = row[0], token=row[1], name=row[2])
+                images_all.add_image(image)
+            return images_all
         except:
             return None
 
