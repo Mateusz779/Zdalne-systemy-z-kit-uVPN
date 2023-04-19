@@ -77,7 +77,7 @@
 					<td>{{ machine.image_name }}</td>
 					<td>{{ machine.start_time }}</td>
                     <td>{{ machine.ip }}</td>
-					<td><button onclick="ssh({{ machine.ip, machine.username, machine.password }})">SSH</button></td>
+					<td><button onclick="ssh({{ machine.ip }}, {{ machine.username }}, {{ machine.password }})">SSH</button></td>
 				</tr>
 			{% endfor %}
 		</tbody>
