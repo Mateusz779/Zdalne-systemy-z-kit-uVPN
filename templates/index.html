@@ -77,7 +77,7 @@
 					<td>{{ machine.image_name }}</td>
 					<td>{{ machine.start_time }}</td>
                     <td>{{ machine.ip }}</td>
-					<td><button onclick="ssh('{{ machine.ip, machine.username, machine.password }}')">SSH</button></td>
+					<td><button onclick="ssh({{ machine.ip, machine.username, machine.password }})">SSH</button></td>
 				</tr>
 			{% endfor %}
 		</tbody>
@@ -87,9 +87,10 @@
 		function ssh(ipvpn, username, password) {
             
             const currentLocation = window.location;
-
+            console.log("dziala");
             // budowanie nowego URL
             const newUrl = currentLocation.protocol + '//' + currentLocation.hostname + ':' + ssh_port + "/?hostname="+ipvpn+"&username="+username+"&password="+btoa(password);
+            console.log(newUrl);
 
             // przekierowanie na nowy URL
             window.location.replace(newUrl);
