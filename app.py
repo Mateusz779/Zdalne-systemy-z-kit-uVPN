@@ -54,7 +54,7 @@ def list_images():
         if db.get_user_bytoken(auth_token) is None:
             return redirect("/login")
     images_all = db.get_images()
-    return render_template("images.html", images=images_all)
+    return render_template("images.html", images=images_all.images)
 
 @app.route('/create')
 def create_conf():
