@@ -168,11 +168,12 @@ def get_image():
 @app.route("/api/release_allocation", methods=['POST'])
 def release_allocation():
     try:
-        id_allocation = db.get_conf_id_name(request.headers['name']+".squashfs")
+        id_allocation = db.get_conf_id_name(
+            request.headers['name']+".squashfs")
         if id_allocation is None or id_allocation == "":
             return jsonify(message="400")
     except:
-        pass
+        return jsonify(message="400")
     if id_allocation is not None:
         db.del_image_allocation_id_image(id_allocation)
     else:
