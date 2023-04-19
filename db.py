@@ -273,7 +273,7 @@ def update_image_allocation_ip(token, ip):
     connect()
     with get_cur() as cur:
         cur.execute("""
-            UPDATE image_allocation SET ip = %s WHERE image_id = %s 
+            UPDATE image_allocation SET client_ip = %s WHERE image_id = %s 
         """, (ip, image_id,))
         try:
             conn.commit()
