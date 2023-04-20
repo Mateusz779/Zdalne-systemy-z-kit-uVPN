@@ -12,6 +12,7 @@
             <tr>
                 <th>Token</th>
                 <th>Nazwa</th>
+                <th>IP VPN</th>
                 <th>Usuń</th>
             </tr>
         </thead>
@@ -20,6 +21,7 @@
                 <tr>
                     <td>{{ image.token }}</td>
                     <td>{{ image.name }}</td>
+                    <td>{{ image.vpn_ip }}</td>
                     <td>
                         <form action="{{ url_for('delete', image_id=image.id) }}" method="post">
                             <button type="submit" class="btn btn-danger">Usuń</button>

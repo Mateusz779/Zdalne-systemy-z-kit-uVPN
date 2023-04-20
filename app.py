@@ -106,7 +106,7 @@ def create_conf_post():
     if os.path.exists(folder):
         shutil.rmtree(folder)
 
-    db.add_conf_image(config_name+".squashfs", token_name)
+    db.add_conf_image(config_name+".squashfs", token_name, ip)
 
     return send_file(os.path.join(app.config['UPLOAD_FOLDER'], config_name+".pub"))
 

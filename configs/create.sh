@@ -28,7 +28,7 @@ shift $((OPTIND-1))
 CONFIGS=$(pwd)
 echo "${CONFIGS}"
 
-
+squashfs
 #sudo apt update
 #sudo apt install cmake make g++ gcc libssl-dev libgmp-dev
 

@@ -1,8 +1,9 @@
 class Image:
-    def __init__(self, id, token, name):
+    def __init__(self, id, token, name, vpn_ip):
         self.id = id
         self.name = name
         self.token = token
+        self.vpn_ip = vpn_ip
 
 class ImageManager:
     def __init__(self):

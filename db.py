@@ -25,7 +25,8 @@ def connect():
                 id SERIAL PRIMARY KEY,
                 image_name VARCHAR(255) NOT NULL,
                 token VARCHAR(255) NOT NULL,
-                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                vpn_ip INET
             );""")
         conn.commit()
         cur.execute("""
@@ -75,13 +76,13 @@ def get_one(sql, value):
             return None
 
 
-def add_conf_image(name, token):
+def add_conf_image(name, token, ip):
     connect()
     with get_cur() as cur:
         cur.execute("""
-            INSERT INTO image (image_name, token)
-            VALUES (%s, %s)
-        """, (name, token,))
+            INSERT INTO image (image_name, token, vpn_ip)
+            VALUES (%s, %s, %s)
+        """, (name, token,ip, ))
         conn.commit()
 
 
@@ -182,11 +183,11 @@ def get_images():
     connect()
     with get_cur() as cur:
         cur.execute("""
-            SELECT id, token, image_name FROM image""")
+            SELECT id, token, image_name, vpn_ip FROM image""")
         try:
             images_all = images.ImageManager()
             for row in cur.fetchall():
-                image = images.Image(id = row[0], token=row[1], name=row[2])
+                image = images.Image(id = row[0], token=row[1], name=row[2], vpn_ip=row[3])
                 images_all.add_image(image)
             return images_all
         except:
