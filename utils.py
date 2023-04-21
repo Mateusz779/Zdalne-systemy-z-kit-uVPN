@@ -64,10 +64,10 @@ class PingThread(threading.Thread):
             print(date)
             if date is None:
                 return
-            delta = datetime.datetime.now() - date
-            print(datetime.datetime.now())
+            delta = datetime.datetime.utcnow() - date
+            print(datetime.datetime.utcnow())
             print(delta.total_seconds())
-            if delta.total_seconds() < -30:
+            if delta.total_seconds() > 30:
                 db.del_image_allocation_id(self.Id)
                 print("deleted")
         else:
