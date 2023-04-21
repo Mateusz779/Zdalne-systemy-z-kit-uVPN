@@ -42,9 +42,7 @@ def check_allocation_thread_function():
     while True:
         ids = db.get_image_allocation_all()
         for x in ids:
-            print(x)
             ip = db.get_image_allocation_clientip_id_vpn(x[0])
-            print(x[0], ip)
             ping_thread = PingThread(ip, x[0])
             ping_thread.start()
 
@@ -58,13 +56,16 @@ class PingThread(threading.Thread):
         self.Id = id
 
     def run(self):
+        print(self.Ip, self.Id)
         if self.Ip is None:
             return
         if ping_client(self.Ip) == False:
             date = db.get_image_allocation_time_id(self.Id)
+            print(date)
             if date is None:
                 return
             delta = datetime.datetime.now() - date
+            print(delta)
             if delta.total_seconds() > 30:
                 db.del_image_allocation_id(self.Id)
         else:
