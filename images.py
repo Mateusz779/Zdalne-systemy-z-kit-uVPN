@@ -5,6 +5,7 @@ class Image:
         self.token = token
         self.vpn_ip = vpn_ip
 
+
 class ImageManager:
     def __init__(self):
         self.images = []

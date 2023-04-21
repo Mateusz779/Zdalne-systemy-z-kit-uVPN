@@ -7,6 +7,8 @@ class Machine:
         self.iplocal = iplocal
         self.username = username
         self.password = password
+
+
 class MachineManager:
     def __init__(self):
         self.machines = []

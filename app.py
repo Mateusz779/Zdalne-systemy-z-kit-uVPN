@@ -112,7 +112,8 @@ def create_conf_post():
 
     if os.path.exists(folder):
         shutil.rmtree(folder)
-    output = subprocess.run(['openssl','passwd','-6', password], capture_output=True, text=True)
+    output = subprocess.run(
+        ['openssl', 'passwd', '-6', password], capture_output=True, text=True)
     db.add_conf_image(config_name+".squashfs", token_name, ip, output.stdout)
 
     return send_file(os.path.join(app.config['UPLOAD_FOLDER'], config_name+".pub"))

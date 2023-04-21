@@ -11,6 +11,7 @@ import db
 import config
 import ipaddress
 
+
 def generate_random_string(length):
     letters = string.ascii_letters
     random_string = ''.join(random.choice(letters) for i in range(length))
@@ -41,10 +42,11 @@ def ssh_thread_function():
 def check_allocation_thread_function():
     while True:
         ids = db.get_image_allocation_all()
-        for x in ids:
-            ip = db.get_image_allocation_clientip_id_vpn(x[0])
-            ping_thread = PingThread(ip, x[0])
-            ping_thread.start()
+        if ids is not None:
+            for x in ids:
+                ip = db.get_image_allocation_clientip_id_vpn(x[0])
+                ping_thread = PingThread(ip, x[0])
+                ping_thread.start()
 
         sleep(10)
 
@@ -61,15 +63,11 @@ class PingThread(threading.Thread):
             return
         if ping_client(self.Ip) == False:
             date = db.get_image_allocation_time_id(self.Id)
-            print(date)
             if date is None:
                 return
             delta = datetime.datetime.utcnow() - date
-            print(datetime.datetime.utcnow())
-            print(delta.total_seconds())
             if delta.total_seconds() > 30:
                 db.del_image_allocation_id(self.Id)
-                print("deleted")
         else:
             db.update_image_allocation_time(self.Id)
 
@@ -81,6 +79,7 @@ def init_threads():
     allocation_thread = threading.Thread(
         target=check_allocation_thread_function)
     allocation_thread.start()
+
 
 def is_valid_ip_address(ip: str) -> bool:
     try:
