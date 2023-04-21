@@ -58,7 +58,6 @@ class PingThread(threading.Thread):
         self.Id = id
 
     def run(self):
-        print(self.Ip, self.Id)
         if self.Ip is None:
             return
         if ping_client(self.Ip) == False:
