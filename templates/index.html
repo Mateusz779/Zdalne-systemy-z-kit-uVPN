@@ -86,7 +86,7 @@
 	</div>
 
 	<script>
-		function ssh(ipvpn, iplocal username, password) {
+		function ssh(ipvpn, iplocal, username, password) {
 			const currentLocation = window.location;
 			let ip = ipvpn != null ? ipvpn : iplocal;
 			const newUrl = currentLocation.protocol + '//' + currentLocation.hostname + ':' + {{ ssh_port }} + "/?hostname="+ip+"&username="+username+"&password="+btoa(password);
