@@ -64,6 +64,7 @@ class PingThread(threading.Thread):
             print(date)
             if date is None:
                 return
+            print(datetime.timedelta(date))
             delta = datetime.datetime.now() - date
             print(datetime.datetime.now())
             print(delta.total_seconds())
