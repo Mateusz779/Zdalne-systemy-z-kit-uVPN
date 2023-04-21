@@ -36,6 +36,7 @@ def login():
             return render_template('index.html', ssh_port=config.webssh_port, machines=machines_all.machines, timezone=config.timezone)
     return render_template('login.html')
 
+
 @app.route('/logout')
 def logout():
     auth_token = request.cookies.get('auth_token')
@@ -47,6 +48,7 @@ def logout():
             return response
     return render_template('login.html')
 
+
 @app.route('/images')
 def list_images():
     auth_token = request.cookies.get('auth_token')
@@ -55,6 +57,7 @@ def list_images():
             return redirect("/login")
     images_all = db.get_images()
     return render_template("images.html", images=images_all.images)
+
 
 @app.route('/create')
 def create_conf():
@@ -71,15 +74,19 @@ def create_conf_post():
     if auth_token != "" or auth_token is not None:
         if db.get_user_bytoken(auth_token) is None:
             return redirect("/login")
-        
-    config_name = request.form['config_name']
-    token_name = request.form['token_name']
-    key_length = request.form['key_length']
-    ip = request.form['ip']
+
+    try:
+        config_name = request.form['config_name']
+        token_name = request.form['token_name']
+        key_length = request.form['key_length']
+        ip = request.form['ip']
+        password = request.form['pass']
+    except:
+        return jsonify(message="400")
     if db.get_conf_id_name(config_name+".squashfs") is not None:
         return jsonify(message="400")
     if db.get_conf_id(token_name) is not None:
-        return jsonify(message="400") 
+        return jsonify(message="400")
     folder = utils.generate_random_string(5)
     try:
         os.mkdir(os.path.join(os.getcwd(), 'configs', folder))
@@ -105,8 +112,8 @@ def create_conf_post():
 
     if os.path.exists(folder):
         shutil.rmtree(folder)
-
-    db.add_conf_image(config_name+".squashfs", token_name, ip)
+    output = subprocess.run(['openssl','passwd','-6', password], capture_output=True, text=True)
+    db.add_conf_image(config_name+".squashfs", token_name, ip, output.stdout)
 
     return send_file(os.path.join(app.config['UPLOAD_FOLDER'], config_name+".pub"))
 
@@ -126,68 +133,27 @@ def login_api():
     response.set_cookie('auth_token', auth_token)
     return response
 
+
 @app.route('/delete/<int:image_id>', methods=['POST'])
 def delete(image_id):
     auth_token = request.cookies.get('auth_token')
     if auth_token != "" or auth_token is not None:
         if db.get_user_bytoken(auth_token) is None:
             return redirect("/login")
-        
+
     if db.get_image_allocation(image_id) is not None:
         return jsonify(message="409")
     filename = db.get_conf_image_id(image_id)
     squashfs = os.path.join(app.config['UPLOAD_FOLDER'], filename)
-    pubkey = os.path.join(app.config['UPLOAD_FOLDER'], filename.split(".")[0]+".pub")
+    pubkey = os.path.join(
+        app.config['UPLOAD_FOLDER'], filename.split(".")[0]+".pub")
     if os.path.exists(squashfs):
         os.remove(squashfs)
     if os.path.exists(pubkey):
         os.remove(pubkey)
     db.del_image(image_id)
-    
+
     return redirect(url_for('list_images'))
-
-@app.route("/api/addimage", methods=['POST'])
-def add_image():
-    auth_token = request.cookies.get('auth_token')
-    if auth_token != "" or auth_token is not None:
-        if db.get_user_bytoken(auth_token) is None:
-            return redirect("/login")
-    name = None
-    try:
-        file = request.files['file']
-        if file is None or file == "":
-            return jsonify(message="nofile")
-    except Exception as e:
-        return jsonify(message="nofile")
-
-    try:
-        token = request.form['token']
-        if token is None or token == "":
-            return jsonify(message="notoken")
-    except:
-        if token is None:
-            return jsonify(message="notoken")
-
-    incorrect = True
-    while incorrect:
-        if db.GetVPNImage(token) is not None:
-            if name[-1:].isdigit():
-                name = name[:-1] + str(int(name[-1:])+1)
-            else:
-                name = name+"1"
-        else:
-            incorrect = False
-
-    filename = secure_filename(file.filename)
-    while os.path.exists(os.path.join(app.config['UPLOAD_FOLDER'], filename)):
-        if filename[0].isdigit():
-            filename = str(int(filename[0])+1)+filename[1:]
-        else:
-            filename = "1"+filename
-    file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-    db.add_conf_image(filename, token)
-
-    return jsonify(message="ok")
 
 
 @app.route("/api/getconf")
@@ -214,6 +180,15 @@ def get_image():
         filename = config.default_file
 
     return send_file(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+
+
+@app.route("/api/getpass")
+def get_pass():
+    try:
+        password = db.get_conf_password(request.headers['token'])
+        return password
+    except:
+        return ""
 
 
 @app.route("/api/release_allocation", methods=['POST'])

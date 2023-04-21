@@ -4,6 +4,7 @@ import utils
 import machines
 import images
 
+
 def connect():
     global cur, conn
     try:
@@ -18,7 +19,7 @@ def connect():
     cur = conn.cursor()
 
     with conn.cursor() as cur:
-        cur.execute("SET TIMEZONE = %s",(config.timezone,))
+        cur.execute("SET TIMEZONE = %s", (config.timezone,))
         conn.commit()
         cur.execute("""
             CREATE TABLE IF NOT EXISTS image (
@@ -26,6 +27,7 @@ def connect():
                 image_name VARCHAR(255) NOT NULL,
                 token VARCHAR(255) NOT NULL,
                 created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                password VARCHAR(128) NOT NULL,
                 vpn_ip INET
             );""")
         conn.commit()
@@ -76,13 +78,13 @@ def get_one(sql, value):
             return None
 
 
-def add_conf_image(name, token, ip):
+def add_conf_image(name, token, ip, password):
     connect()
     with get_cur() as cur:
         cur.execute("""
-            INSERT INTO image (image_name, token, vpn_ip)
-            VALUES (%s, %s, %s)
-        """, (name, token,ip, ))
+            INSERT INTO image (image_name, token, vpn_ip, password)
+            VALUES (%s, %s, %s, %s)
+        """, (name, token, ip, password, ))
         conn.commit()
 
 
@@ -90,8 +92,13 @@ def get_conf_image(token):
     return get_one("SELECT image_name FROM image WHERE token = %s", token)
 
 
+def get_conf_password(token):
+    return get_one("SELECT password FROM image WHERE token = %s", token)
+
+
 def get_conf_image_id(id):
     return get_one("SELECT image_name FROM image WHERE id = %s", id)
+
 
 def get_conf_id(token):
     return get_one("SELECT id FROM image WHERE token = %s", token)
@@ -154,13 +161,13 @@ def del_auth_token(token):
             return None
 
 
-
 def login(username, password):
     user_id = get_user_pass(username, password)
     if user_id is not None:
         return add_auth_token(user_id)
     else:
         return None
+
 
 def get_machines():
     connect()
@@ -170,15 +177,18 @@ def get_machines():
         try:
             machinesall = machines.MachineManager()
             for row in cur.fetchall():
-                token = get_one("SELECT token FROM image WHERE id = %s", row[0])
-                image_name = get_one("SELECT image_name FROM image WHERE id = %s", row[0])
-                machine = machines.Machine(token, image_name, start_time=row[1], ipvpn=row[2], iplocal=row[3], username="root", password="")
+                token = get_one(
+                    "SELECT token FROM image WHERE id = %s", row[0])
+                image_name = get_one(
+                    "SELECT image_name FROM image WHERE id = %s", row[0])
+                machine = machines.Machine(
+                    token, image_name, start_time=row[1], ipvpn=row[2], iplocal=row[3], username="root", password="")
                 machinesall.add_machine(machine)
             return machinesall
         except:
             return None
-        
-        
+
+
 def get_images():
     connect()
     with get_cur() as cur:
@@ -187,12 +197,14 @@ def get_images():
         try:
             images_all = images.ImageManager()
             for row in cur.fetchall():
-                image = images.Image(id = row[0], token=row[1], name=row[2], vpn_ip=row[3])
+                image = images.Image(
+                    id=row[0], token=row[1], name=row[2], vpn_ip=row[3])
                 images_all.add_image(image)
             return images_all
         except:
             return None
-        
+
+
 def del_image(image_id):
     connect()
     with get_cur() as cur:
@@ -202,6 +214,7 @@ def del_image(image_id):
             return True
         except:
             return None
+
 
 def get_image_allocation_all_id():
     connect()
@@ -225,6 +238,7 @@ def get_image_allocation_all():
             return results
         except:
             return None
+
 
 def get_image_allocation(image_id):
     return get_one("SELECT id FROM image_allocation WHERE image_id = %s", image_id)
@@ -306,6 +320,7 @@ def update_image_allocation_time(id):
             return True
         except:
             return None
+
 
 def update_image_allocation_ip_vpn(token, ip):
     image_id = get_conf_id(token)

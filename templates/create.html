@@ -70,15 +70,17 @@ form textarea {
 <br>
     <h1>Formularz tworzenia obrazu konfiguracyjnego</h1>
     <form method="POST" action="/api/createconf" enctype="multipart/form-data">
-        <label>Nazwa konfiguracji:</label><br>
+        <label>Nazwa konfiguracji:</label>
         <input type="text" name="config_name" required><br><br>
-        <label>Nazwa tokenu:</label><br>
+        <label>Nazwa tokenu:</label>
         <input type="text" name="token_name" required><br><br>
-        <label>Długość klucza:</label><br>
+        <label>Długość klucza:</label>
         <input type="number" name="key_length" min="1024" value="2048" required><br><br>
-        <label>Adres ip VPN:</label><br>
+        <label>Adres ip VPN:</label>
         <input type="text" name="ip" required><br><br>
-        <label>Konfiguracja authorized_keys:</label><br>
+        <label>Hasło dla roota:</label>
+        <input type="password" name="pass" required><br><br>
+        <label>Konfiguracja authorized_keys:</label>
         <textarea name="authorized_keys_config" rows="4" cols="50"></textarea><br><br>
         <input type="submit" value="Wyślij">
     </form>
