@@ -137,7 +137,7 @@ def delete(image_id):
         return jsonify(message="409")
     filename = db.get_conf_image_id(image_id)
     squashfs = os.path.join(app.config['UPLOAD_FOLDER'], filename)
-    pubkey = os.path.join(app.config['UPLOAD_FOLDER'], filename.split(".")[0])
+    pubkey = os.path.join(app.config['UPLOAD_FOLDER'], filename.split(".")[0]+".pub")
     if os.path.exists(squashfs):
         os.remove(squashfs)
     if os.path.exists(pubkey):
@@ -238,6 +238,8 @@ def add_ip():
     try:
         token = request.headers['token']
         ip = request.form['ip']
+        if utils.is_valid_ip_address(ip) is False:
+            return jsonify(message="400")
     except:
         return jsonify(message="400")
     if db.update_image_allocation_ip_vpn(token, ip) is not None:

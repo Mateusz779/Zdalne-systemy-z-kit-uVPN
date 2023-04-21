@@ -9,7 +9,7 @@ import threading
 from time import sleep
 import db
 import config
-
+import ipaddress
 
 def generate_random_string(length):
     letters = string.ascii_letters
@@ -76,3 +76,10 @@ def init_threads():
     allocation_thread = threading.Thread(
         target=check_allocation_thread_function)
     allocation_thread.start()
+
+def is_valid_ip_address(ip: str) -> bool:
+    try:
+        ipaddress.IPv4Address(ip)
+        return True
+    except ipaddress.AddressValueError:
+        return False

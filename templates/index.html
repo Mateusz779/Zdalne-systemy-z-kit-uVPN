@@ -78,7 +78,7 @@
 						<td>{{ machine.start_time }}</td>
 						<td>{{ machine.ipvpn }}</td>
 						<td>{{ machine.iplocal }}</td>
-						<td><button class="btn btn-primary" onclick="ssh('{{ machine.ipvpn }}', '{{ machine.username }}', '{{ machine.password }}')">SSH</button></td>
+						<td><button class="btn btn-primary" onclick="ssh('{{ machine.ipvpn }}','{{machine.iplocal}}', '{{ machine.username }}', '{{ machine.password }}')">SSH</button></td>
 					</tr>
 				{% endfor %}
 			</tbody>
@@ -86,9 +86,10 @@
 	</div>
 
 	<script>
-		function ssh(ipvpn, username, password) {
+		function ssh(ipvpn, iplocal username, password) {
 			const currentLocation = window.location;
-			const newUrl = currentLocation.protocol + '//' + currentLocation.hostname + ':' + {{ ssh_port }} + "/?hostname="+ipvpn+"&username="+username+"&password="+btoa(password);
+			let ip = ipvpn != null ? ipvpn : iplocal;
+			const newUrl = currentLocation.protocol + '//' + currentLocation.hostname + ':' + {{ ssh_port }} + "/?hostname="+ip+"&username="+username+"&password="+btoa(password);
 			window.open(newUrl,"_blank");
 		}
 	</script>
