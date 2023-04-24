@@ -13,6 +13,7 @@ import machines
 
 app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = "squash"
+app.config['STYLE_FOLDER'] = "style"
 app.config['MAX_CONTENT_LENGTH'] = 1024 * 1024 * 512  # 512MB
 
 utils.init_threads()
@@ -219,6 +220,13 @@ def add_ip():
     else:
         return jsonify(message="400")
 
+
+@app.route("/style/<string:name>")
+def get_style(name):
+    try:
+        return send_file(os.path.join(app.config['STYLE_FOLDER'], name))
+    except:
+        return "", 404
 
 if __name__ == '__main__':
     app.run(host="0.0.0.0")
