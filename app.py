@@ -27,6 +27,13 @@ def login_required(f):
         return f(*args, **kwargs)
     return login_function
 
+def is_logged(auth_token):
+    if auth_token != "" or auth_token is not None:
+        if db.get_user_bytoken(auth_token) is not None:
+            return True
+        
+    return False
+
 @app.route('/')
 @login_required
 def main():
@@ -35,20 +42,20 @@ def main():
 
 
 @app.route('/login')
-@login_required
 def login():
-    return render_template('index.html', ssh_port=config.webssh_port, machines=machines_all.machines)
+    if is_logged(request.cookies.get('auth_token')) is True:
+        machines_all = db.get_machines()
+        return render_template('index.html', ssh_port=config.webssh_port, machines=machines_all.machines)
+    return render_template('login.html')
 
 
 @app.route('/logout')
 def logout():
-    auth_token = request.cookies.get('auth_token')
-    if auth_token != "" or auth_token is not None:
-        if db.get_user_bytoken(auth_token) is not None:
-            db.del_auth_token(auth_token)
-            response = make_response(redirect('/'))
-            response.delete_cookie('auth_token')
-            return response
+    if is_logged(request.cookies.get('auth_token')) is True:
+        db.del_auth_token(request.cookies.get('auth_token'))
+        response = make_response(redirect('/'))
+        response.delete_cookie('auth_token')
+        return response
     return render_template('login.html')
 
 
