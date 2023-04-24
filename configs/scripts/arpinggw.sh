@@ -1,3 +1,3 @@
 #!/bin/sh
 
-ip -s -s neigh flush all dev uvpnT2
+ip -s -s neigh flush all dev $TAP

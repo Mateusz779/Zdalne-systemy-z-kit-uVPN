@@ -173,7 +173,8 @@ def get_machines():
     connect()
     with get_cur() as cur:
         cur.execute("""
-            SELECT image_id, allocation_time, client_ip_vpn, client_ip_local FROM image_allocation""")
+            SELECT image_id, allocation_time, client_ip_vpn,
+                   client_ip_local FROM image_allocation""")
         try:
             machinesall = machines.MachineManager()
             for row in cur.fetchall():
@@ -182,7 +183,8 @@ def get_machines():
                 image_name = get_one(
                     "SELECT image_name FROM image WHERE id = %s", row[0])
                 machine = machines.Machine(
-                    token, image_name, start_time=row[1], ipvpn=row[2], iplocal=row[3], username="root", password="")
+                    token, image_name, start_time=row[1], ipvpn=row[2],
+                    iplocal=row[3], username="root", password="")
                 machinesall.add_machine(machine)
             return machinesall
         except:

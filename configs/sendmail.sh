@@ -11,7 +11,7 @@ account notification
   auth on
   user test
   from test@mkedziora.pl
-  password 
+  password V8ufrLgiEwRF72dM
   tls on
   syslog on
   tls_starttls on

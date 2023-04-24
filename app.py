@@ -1,4 +1,5 @@
 import datetime
+from functools import wraps
 from time import sleep
 from flask import Flask, make_response, redirect, send_file, jsonify, request, render_template, url_for
 import db
@@ -16,25 +17,27 @@ app.config['MAX_CONTENT_LENGTH'] = 1024 * 1024 * 512  # 512MB
 
 utils.init_threads()
 
+def login_required(f):
+    @wraps(f)
+    def login_function(*args, **kwargs):
+        auth_token = request.cookies.get('auth_token')
+        if auth_token != "" or auth_token is not None:
+            if db.get_user_bytoken(auth_token) is None:
+                return redirect("/login")
+        return f(*args, **kwargs)
+    return login_function
 
 @app.route('/')
+@login_required
 def main():
-    auth_token = request.cookies.get('auth_token')
-    if auth_token != "" or auth_token is not None:
-        if db.get_user_bytoken(auth_token) is None:
-            return redirect("/login")
     machines_all = db.get_machines()
     return render_template('index.html', ssh_port=config.webssh_port, machines=machines_all.machines)
 
 
 @app.route('/login')
+@login_required
 def login():
-    auth_token = request.cookies.get('auth_token')
-    if auth_token != "" or auth_token is not None:
-        if db.get_user_bytoken(auth_token) is not None:
-            machines_all = db.get_machines()
-            return render_template('index.html', ssh_port=config.webssh_port, machines=machines_all.machines)
-    return render_template('login.html')
+    return render_template('index.html', ssh_port=config.webssh_port, machines=machines_all.machines)
 
 
 @app.route('/logout')
@@ -50,31 +53,21 @@ def logout():
 
 
 @app.route('/images')
+@login_required
 def list_images():
-    auth_token = request.cookies.get('auth_token')
-    if auth_token != "" or auth_token is not None:
-        if db.get_user_bytoken(auth_token) is None:
-            return redirect("/login")
     images_all = db.get_images()
     return render_template("images.html", images=images_all.images)
 
 
 @app.route('/create')
+@login_required
 def create_conf():
-    auth_token = request.cookies.get('auth_token')
-    if auth_token != "" or auth_token is not None:
-        if db.get_user_bytoken(auth_token) is None:
-            return redirect("/login")
     return render_template("create.html")
 
 
 @app.route('/api/createconf', methods=['POST'])
+@login_required
 def create_conf_post():
-    auth_token = request.cookies.get('auth_token')
-    if auth_token != "" or auth_token is not None:
-        if db.get_user_bytoken(auth_token) is None:
-            return redirect("/login")
-
     try:
         config_name = request.form['config_name']
         token_name = request.form['token_name']
@@ -136,12 +129,8 @@ def login_api():
 
 
 @app.route('/delete/<int:image_id>', methods=['POST'])
+@login_required
 def delete(image_id):
-    auth_token = request.cookies.get('auth_token')
-    if auth_token != "" or auth_token is not None:
-        if db.get_user_bytoken(auth_token) is None:
-            return redirect("/login")
-
     if db.get_image_allocation(image_id) is not None:
         return jsonify(message="409")
     filename = db.get_conf_image_id(image_id)

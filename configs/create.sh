@@ -83,12 +83,12 @@ fi
 mkdir /tmp/output/vpn/scripts
 cat <<EOF> /tmp/output/vpn/scripts/starttap.sh
 #!/bin/sh
-ifconfig uvpnT2 $ip netmask 255.255.255.0 up
+ifconfig '$TAP' $ip netmask 255.255.255.0 up
 EOF
 
 cat <<EOF> /tmp/output/vpn/scripts/arpinggw.sh
 #!/bin/sh
-ip -s -s neigh flush all dev uvpnT2
+ip -s -s neigh flush all dev '$TAP'
 EOF
 
 chmod +x /tmp/output/vpn/scripts/starttap.sh

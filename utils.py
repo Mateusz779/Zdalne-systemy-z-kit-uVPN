@@ -85,4 +85,9 @@ def is_valid_ip_address(ip: str) -> bool:
         ipaddress.IPv4Address(ip)
         return True
     except ipaddress.AddressValueError:
+        try:
+            ipaddress.IPv6Address(ip)
+            return True
+        except:
+            pass
         return False
