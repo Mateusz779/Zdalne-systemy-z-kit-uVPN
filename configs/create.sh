@@ -87,8 +87,12 @@ if [ -n "$msmtp_conf" ]; then
 fi
 
 if [ -n "$scripts" ]; then
-  cp -r $scripts /tmp/output/vpn
+  mkdir /tmp/output/vpn/scripts
+  cp -r $scripts/* /tmp/output/vpn/scripts
 fi
+
+ls /tmp/output/vpn/scripts
+ls /tmp/output/vpn/
 
 sed -i 's/ip/'$ip'/g' /tmp/output/vpn/scripts/starttap.sh
 sed -i '/^private_key/c\private_key uVPN.priv' /tmp/output/vpn/$(basename "$conf")
