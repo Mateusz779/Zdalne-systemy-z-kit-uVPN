@@ -51,7 +51,7 @@ def ssh_thread_function():
         # print(process.args)
         key = RSA.generate(3072)
         with open(os.path.join(os.getcwd(), 'keys', "sshkey"), 'wb') as content_file:
-            chmod(os.path.join(os.getcwd(), 'keys', "sshkey"), 0600)
+            chmod(os.path.join(os.getcwd(), 'keys', "sshkey"), 0o600)
             content_file.write(key.exportKey('PEM'))
         pubkey = key.publickey()
         with open(os.path.join(os.getcwd(), 'keys', "sshkey.pub"), 'wb') as content_file:
