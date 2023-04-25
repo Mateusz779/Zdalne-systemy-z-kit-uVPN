@@ -44,6 +44,7 @@ def ssh_thread_function():
     except:
         pass
     if os.path.exists(os.path.join(os.getcwd(), 'keys', "sshkey")) is False:
+        print(os.path.join(os.getcwd(), 'keys', "sshkey"))
         subprocess.run(['ssh-keygen', '-t rsa ', '-f '+os.path.join(os.getcwd(), 'keys', "sshkey"), '-P ""'])
     while os.path.exists(os.path.join(os.getcwd(), 'keys', "sshkey")) is False:
         pass
