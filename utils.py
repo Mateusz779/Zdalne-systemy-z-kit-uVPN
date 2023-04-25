@@ -85,6 +85,7 @@ class PingThread(threading.Thread):
             delta = datetime.datetime.utcnow() - date
             if delta.total_seconds() > DELETE_TIMEOUT:
                 db.del_image_allocation_id(self.Id)
+                print("deleted:", self.Id)
         else:
             db.update_image_allocation_time(self.Id)
 
