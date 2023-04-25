@@ -11,8 +11,8 @@ import db
 import config
 import ipaddress
 
-DELETE_TIMEOUT=30
-RESTART_DELETE_THREAD=10
+DELETE_TIMEOUT = 30
+RESTART_DELETE_THREAD = 10
 
 
 def generate_random_string(length):
@@ -39,7 +39,15 @@ def ping_client(ip):
 
 
 def ssh_thread_function():
-    subprocess.run(['wssh', '--fbidhttp=False', '--port='+config.webssh_port])
+    try:
+        os.mkdir(os.path.join(os.getcwd(), 'keys'))
+    except:
+        pass
+    if os.path.exists(os.path.join(os.getcwd(), 'keys', "sshkey")) is False:
+        subprocess.run(['ssh-keygen ', '-t rsa ', '-f key', '-q', '-P ""'])
+    
+    subprocess.run(['wssh', '--fbidhttp=False', '--port='+config.webssh_port, 
+                    '--hostfile='+os.path.join(os.getcwd(), 'keys', "sshkey")])
 
 
 def check_allocation_thread_function():
