@@ -155,6 +155,16 @@ def delete(image_id):
     return redirect(url_for('list_images'))
 
 
+
+@app.route('/download_key/<int:image_id>', methods=['POST'])
+@login_required
+def download_key(image_id):
+    filename = db.get_conf_image_id(image_id)
+
+    return send_file(os.path.join(
+        app.config['UPLOAD_FOLDER'], filename.split(".")[0]+".pub"))
+
+
 @app.route("/api/getconf")
 def get_image():
     try:
