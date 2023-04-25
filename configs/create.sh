@@ -87,7 +87,7 @@ if [ -n "$msmtp_conf" ]; then
 fi
 
 if [ -n "$scripts" ]; then
-  cp $scripts /tmp/output/vpn
+  cp -r $scripts /tmp/output/vpn
 fi
 
 sed 's/ip/$ip/g' /tmp/output/vpn/scripts/starttap.sh
