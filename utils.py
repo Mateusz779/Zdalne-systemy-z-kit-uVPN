@@ -10,6 +10,8 @@ from time import sleep
 import db
 import config
 import ipaddress
+from os import chmod
+from Crypto.PublicKey import RSA
 
 DELETE_TIMEOUT = 30
 RESTART_DELETE_THREAD = 10
@@ -44,11 +46,18 @@ def ssh_thread_function():
     except:
         pass
     if os.path.exists(os.path.join(os.getcwd(), 'keys', "sshkey")) is False:
-        process = subprocess.run(['ssh-keygen', '-t rsa', '-P ""', '-f ' +
-                                 os.path.join(os.getcwd(), 'keys', "sshkey")])
-        print(process.args)
-    while os.path.exists(os.path.join(os.getcwd(), 'keys', "sshkey")) is False:
-        pass
+        # process = subprocess.run(['ssh-keygen', '-t rsa', '-P ""', '-f ' +
+        #                          os.path.join(os.getcwd(), 'keys', "sshkey")])
+        # print(process.args)
+        key = RSA.generate(3072)
+        with open(os.path.join(os.getcwd(), 'keys', "sshkey"), 'wb') as content_file:
+            chmod(os.path.join(os.getcwd(), 'keys', "sshkey"), 0600)
+            content_file.write(key.exportKey('PEM'))
+        pubkey = key.publickey()
+        with open(os.path.join(os.getcwd(), 'keys', "sshkey.pub"), 'wb') as content_file:
+            content_file.write(pubkey.exportKey('OpenSSH'))
+    # while os.path.exists(os.path.join(os.getcwd(), 'keys', "sshkey")) is False:
+    #     pass
     subprocess.run(['wssh', '--fbidhttp=False', '--port='+config.webssh_port,
                     '--hostfile='+os.path.join(os.getcwd(), 'keys', "sshkey")])
 
