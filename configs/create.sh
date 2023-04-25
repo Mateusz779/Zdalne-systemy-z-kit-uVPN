@@ -4,9 +4,9 @@ echo "Parametry podane do skryptu: $@"
 kitcrypto_version="0.0.3"
 uvpn3_version="3.0.3"
 
-usage() { echo "Usage: [-a <root ssh authorized_keys>] [-b add executable to output] [-c <conf file>] [-d <sshd_config>] [-i <ini config>] [-k <pub server key>] [-l <priv key lenght>] [-m <msmtp script>] [-n <name>] [-p <vpn ipaddress>]" 1>&2; exit 1; }
+usage() { echo "Usage: [-a <root ssh authorized_keys>] [-b add executable to output] [-c <conf file>] [-d <sshd_config>] [-i <ini config>] [-k <pub server key>] [-l <priv key lenght>] [-m <msmtp script>] [-n <name>] [-o <config for msmtp>] [-p <vpn ipaddress>]" 1>&2; exit 1; }
 
-while getopts "a:b:c:d:e:i:k:l:m:n:p:" option
+while getopts "a:b:c:d:e:i:k:l:m:n:o:p:" option
 do
     case "${option}"
         in
@@ -19,6 +19,7 @@ do
           l)keylen=${OPTARG};;
           m)msmtp=${OPTARG};;
           n)name=${OPTARG};;
+          o)msmtp_conf=${OPTARG};;
           p)ip=${OPTARG};;
           *)usage;;
     esac
@@ -68,16 +69,20 @@ cp $ini /tmp/output/vpn
 cp $key /tmp/output/vpn
 
 if [ -n "$akeys" ]; then
-  cp  $akeys /tmp/output/ssh
+  cp $akeys /tmp/output/ssh
 fi
 
 if [ -n "$sshconf" ]; then
-  cp  $sshconf /tmp/output/ssh
+  cp $sshconf /tmp/output/ssh
 fi
 
 mkdir /tmp/output/msmtp
 if [ -n "$msmtp" ]; then
-  cp  $msmtp /tmp/output/msmtp
+  cp $msmtp /tmp/output/msmtp
+fi
+
+if [ -n "$msmtp_conf" ]; then
+  cp $msmtp_conf /tmp/output/msmtp
 fi
 
 mkdir /tmp/output/vpn/scripts

@@ -11,6 +11,9 @@ import db
 import config
 import ipaddress
 
+DELETE_TIMEOUT=30
+RESTART_DELETE_THREAD=10
+
 
 def generate_random_string(length):
     letters = string.ascii_letters
@@ -48,7 +51,7 @@ def check_allocation_thread_function():
                 ping_thread = PingThread(ip, x[0])
                 ping_thread.start()
 
-        sleep(10)
+        sleep(RESTART_DELETE_THREAD)
 
 
 class PingThread(threading.Thread):
@@ -65,7 +68,7 @@ class PingThread(threading.Thread):
             if date is None:
                 return
             delta = datetime.datetime.utcnow() - date
-            if delta.total_seconds() > 30:
+            if delta.total_seconds() > DELETE_TIMEOUT:
                 db.del_image_allocation_id(self.Id)
         else:
             db.update_image_allocation_time(self.Id)
