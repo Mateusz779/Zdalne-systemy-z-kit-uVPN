@@ -2,7 +2,7 @@
 echo "Parametry podane do skryptu: $@"
 
 kitcrypto_version="0.0.3"
-uvpn3_version="3.0.3"
+uvpn3_version="3.0.4"
 
 usage() { echo "Usage: [-a <root ssh authorized_keys>] [-b add executable to output] [-c <conf file>] [-d <sshd_config>] [-i <ini config>] [-k <pub server key>] [-l <priv key lenght>] [-m <msmtp script>] [-n <name>] [-o <config for msmtp>] [-p <vpn ipaddress>] [-s <scripts folder>]" 1>&2; exit 1; }
 
