@@ -43,6 +43,7 @@ def ssh_thread_function():
         os.mkdir(os.path.join(os.getcwd(), 'keys'))
     except:
         pass
+    print("cycki")
     print(os.path.exists(os.path.join(os.getcwd(), 'keys', "sshkey")))
     if os.path.exists(os.path.join(os.getcwd(), 'keys', "sshkey")) is False:
         print(os.path.join(os.getcwd(), 'keys', "sshkey"))
