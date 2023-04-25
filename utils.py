@@ -44,7 +44,7 @@ def ssh_thread_function():
     except:
         pass
     if os.path.exists(os.path.join(os.getcwd(), 'keys', "sshkey")) is False:
-        subprocess.run(['ssh-keygen', '-trsa ', '-f '+os.path.join(os.getcwd(), 'keys', "sshkey"), '-P ""'])
+        subprocess.run(['ssh-keygen', '-t rsa', '-f '+os.path.join(os.getcwd(), 'keys', "sshkey"), '-P ""'])
     while os.path.exists(os.path.join(os.getcwd(), 'keys', "sshkey")) is False:
         pass
     subprocess.run(['wssh', '--fbidhttp=False', '--port='+config.webssh_port, 
