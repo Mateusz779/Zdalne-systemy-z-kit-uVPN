@@ -4,9 +4,9 @@ echo "Parametry podane do skryptu: $@"
 kitcrypto_version="0.0.3"
 uvpn3_version="3.0.3"
 
-usage() { echo "Usage: [-a <root ssh authorized_keys>] [-b add executable to output] [-c <conf file>] [-d <sshd_config>] [-i <ini config>] [-k <pub server key>] [-l <priv key lenght>] [-m <msmtp script>] [-n <name>] [-o <config for msmtp>] [-p <vpn ipaddress>]" 1>&2; exit 1; }
+usage() { echo "Usage: [-a <root ssh authorized_keys>] [-b add executable to output] [-c <conf file>] [-d <sshd_config>] [-i <ini config>] [-k <pub server key>] [-l <priv key lenght>] [-m <msmtp script>] [-n <name>] [-o <config for msmtp>] [-p <vpn ipaddress>] [-s <scripts folder>]" 1>&2; exit 1; }
 
-while getopts "a:b:c:d:e:i:k:l:m:n:o:p:" option
+while getopts "a:b:c:d:e:i:k:l:m:n:o:p:s:" option
 do
     case "${option}"
         in
@@ -21,6 +21,7 @@ do
           n)name=${OPTARG};;
           o)msmtp_conf=${OPTARG};;
           p)ip=${OPTARG};;
+          s)scripts=${OPTARG};;
           *)usage;;
     esac
 done
@@ -85,20 +86,11 @@ if [ -n "$msmtp_conf" ]; then
   cp $msmtp_conf /tmp/output/msmtp
 fi
 
-mkdir /tmp/output/vpn/scripts
+if [ -n "$scripts" ]; then
+  cp $scripts /tmp/output/vpn
+fi
 
-echo '#!/bin/bash
-printenv >> /tmp/starttap
-echo "$TAP" >> /tmp/starttap
-ifconfig $TAP '$ip' netmask 255.255.255.0 up >> /tmp/starttap' > /tmp/output/vpn/scripts/starttap.sh
-
-echo '#!/bin/bash
-printenv
-echo "$TAP"
-ip -s -s neigh flush all dev $TAP' > /tmp/output/vpn/scripts/arpinggw.sh
-
-chmod +x /tmp/output/vpn/scripts/starttap.sh
-chmod +x /tmp/output/vpn/scripts/arpinggw.sh
+sed 's/ip/$ip/g' /tmp/output/vpn/scripts/starttap.sh
 
 sed -i '/^private_key/c\private_key uVPN.priv' /tmp/output/vpn/$(basename "$conf")
 sed -i '/^tap_name/c\tap_name uvpnT2' /tmp/output/vpn/$(basename "$conf")
