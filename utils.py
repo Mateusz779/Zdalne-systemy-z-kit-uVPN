@@ -13,8 +13,8 @@ import ipaddress
 from os import chmod
 from Crypto.PublicKey import RSA
 
-DELETE_TIMEOUT = 30
-RESTART_DELETE_THREAD = 10
+DELETE_TIMEOUT = 45
+RESTART_DELETE_THREAD = 3
 
 
 def generate_random_string(length):
