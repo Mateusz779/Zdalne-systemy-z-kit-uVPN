@@ -90,8 +90,7 @@ if [ -n "$scripts" ]; then
   cp -r $scripts /tmp/output/vpn
 fi
 
-sed 's/ip/$ip/g' /tmp/output/vpn/scripts/starttap.sh
-
+sed -i 's/ip/'$ip'/g' starttap.sh
 sed -i '/^private_key/c\private_key uVPN.priv' /tmp/output/vpn/$(basename "$conf")
 sed -i '/^tap_name/c\tap_name uvpnT2' /tmp/output/vpn/$(basename "$conf")
 sed -i '/^name/c\name '"$name" /tmp/output/vpn/$(basename "$conf")
