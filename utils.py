@@ -52,7 +52,7 @@ def ssh_thread_function():
         key = RSA.generate(3072)
         with open(os.path.join(os.getcwd(), 'keys', "sshkey"), 'wb') as content_file:
             chmod(os.path.join(os.getcwd(), 'keys', "sshkey"), 0o600)
-            content_file.write(key.exportKey('PEM'))
+            content_file.write(key.exportKey('OpenSSH'))
         pubkey = key.publickey()
         with open(os.path.join(os.getcwd(), 'keys', "sshkey.pub"), 'wb') as content_file:
             content_file.write(pubkey.exportKey('OpenSSH'))
