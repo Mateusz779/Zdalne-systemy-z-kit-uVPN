@@ -2,7 +2,7 @@
 
 ifconfig > /tmp/ifconfig
 cat /proc/cmdline > /tmp/cmdline
-tar -cvf /tmp/zalacznik.tar /tmp/cmdline /tmp/ifconfig
+tar -cJf /tmp/zalacznik.tar /tmp/cmdline /tmp/ifconfig
 xz -v /tmp/zalacznik.tar
 
 MAILFILE=`mktemp /tmp/mailfile.XXXXXX`
