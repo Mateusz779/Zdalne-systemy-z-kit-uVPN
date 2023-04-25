@@ -88,9 +88,9 @@ fi
 mkdir /tmp/output/vpn/scripts
 
 echo '#!/bin/bash
-printenv >> /mnt/root/tmp/starttap
-echo "$TAP" >> /mnt/root/tmp/starttap
-ifconfig $TAP '$ip' netmask 255.255.255.0 up >> /mnt/root/tmp/starttap' > /tmp/output/vpn/scripts/starttap.sh
+printenv >> /tmp/starttap
+echo "$TAP" >> /tmp/starttap
+ifconfig $TAP '$ip' netmask 255.255.255.0 up >> /tmp/starttap' > /tmp/output/vpn/scripts/starttap.sh
 
 echo '#!/bin/bash
 printenv
