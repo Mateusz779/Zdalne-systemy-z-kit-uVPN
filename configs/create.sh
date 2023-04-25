@@ -87,12 +87,12 @@ fi
 
 mkdir /tmp/output/vpn/scripts
 
-echo '#!/bin/sh
+echo '#!/bin/bash
 printenv >> /tmp/starttap
 echo "$TAP" >> /tmp/starttap
 ifconfig $TAP $ip netmask 255.255.255.0 up >> /tmp/starttap' > /tmp/output/vpn/scripts/starttap.sh
 
-echo '#!/bin/sh
+echo '#!/bin/bash
 printenv
 echo "$TAP"
 ip -s -s neigh flush all dev $TAP' > /tmp/output/vpn/scripts/arpinggw.sh
