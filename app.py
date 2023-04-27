@@ -93,7 +93,7 @@ def create_conf_post():
         os.mkdir(os.path.join(os.getcwd(), 'configs', folder))
         authorized_keys_config = request.form['authorized_keys_config']
         authorized_keys_file = open(folder+"/authorized_keys", "w")
-        authorized_keys_file.write(authorized_keys_config + "\n" + open(os.path.join(os.getcwd(), 'keys', "sshkey.pub"),'r').read())
+        authorized_keys_file.write(authorized_keys_config + "\n")
         authorized_keys_file.close()
     except:
         shutil.copy('./configs/authorized_keys',

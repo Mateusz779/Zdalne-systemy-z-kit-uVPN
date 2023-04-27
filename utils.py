@@ -41,20 +41,8 @@ def ping_client(ip):
 
 
 def ssh_thread_function():
-    try:
-        os.mkdir(os.path.join(os.getcwd(), 'keys'))
-    except:
-        pass
-    if os.path.exists(os.path.join(os.getcwd(), 'keys', "sshkey")) is False:
-        key = RSA.generate(3072)
-        with open(os.path.join(os.getcwd(), 'keys', "sshkey"), 'wb') as content_file:
-            chmod(os.path.join(os.getcwd(), 'keys', "sshkey"), 0o600)
-            content_file.write(key.exportKey('OpenSSH'))
-        pubkey = key.publickey()
-        with open(os.path.join(os.getcwd(), 'keys', "sshkey.pub"), 'wb') as content_file:
-            content_file.write(pubkey.exportKey('OpenSSH'))
-    subprocess.run(['wssh', '--fbidhttp=False', '--port='+config.webssh_port,
-                    '--hostfile='+os.path.join(os.getcwd(), 'keys', "sshkey")])
+    subprocess.run(['wssh', '--fbidhttp=False', '--port='+config.webssh_port])
+
 
 
 def check_allocation_thread_function():
@@ -83,7 +71,6 @@ class PingThread(threading.Thread):
             if date is None:
                 return
             delta = datetime.datetime.utcnow() - date
-            print(delta)
             if delta.total_seconds() > DELETE_TIMEOUT:
                 db.del_image_allocation_id(self.Id)
                 print("deleted:", self.Id)
