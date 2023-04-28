@@ -13,8 +13,8 @@ ATTACHEMENT=/tmp/attachement_`date +'%Y:%m:5d_%H%M%S'`.tar.xz
 cat /tmp/zalacznik.tar.xz >$ATTACHEMENT
 
 cat >$MAILFILE <<EOF
-From: test@mkedziora.pl
-To: admin@mkedziora.pl
+From: user@domain.com
+To: admin@domain.com
 Subject: Uruchomiono maszynę
 Date: $NOW
 MIME-Version: 1.0
@@ -41,6 +41,6 @@ cat >>$MAILFILE <<EOF
 --$BOUNDARY--
 EOF
 
-cat $MAILFILE |msmtp -C /etc/msmtprc -a notification admin@mkedziora.pl
+cat $MAILFILE |msmtp -C /etc/msmtprc -a notification admin@domain.com
 
 rm -f $ATTACHEMENT $MAILFILE
