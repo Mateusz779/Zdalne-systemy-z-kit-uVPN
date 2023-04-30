@@ -154,3 +154,16 @@ boot || goto failed
 
 
 ```
+## Jak uzyskać obraz rootfs
+
+Najprostrzym sposobem do uzyskania obrazu rootfs jest pobranie obrazu ubuntu serwer ser strony: https://ubuntu.com/download/server następnie otwarcie go lub wypakowanie i skopiowanie z folderu casper pliku 
+
+```bash
+ubuntu-server-minimal.squashfs
+```
+
+Następnie plik ten można poddać modyfikacjom za pomocą skryptu 
+
+```bash
+update_rootfs.sh
+```
