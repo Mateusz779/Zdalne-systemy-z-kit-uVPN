@@ -1,5 +1,5 @@
 
-# Projekt systemów zdalnych
+# Projekt systemów zdalnych z Krypto-IT uVPN
 
 Projekt uruchamiania zdalnych systemów.
 
